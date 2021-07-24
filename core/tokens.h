@@ -139,4 +139,7 @@ typedef struct _Node {
   struct _Node * left, * right, * parent;
 }
 Node;
+#ifdef __cplusplus
+  #define CXX
+#endif
 #endif
