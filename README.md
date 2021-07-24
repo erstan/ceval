@@ -5,6 +5,11 @@ A C/C++ library for evaluation of math expressions and breaking them down into p
 <table>
 <thead><th>Function</th><th>Argument(s)</th><th>Return Value</th></thead>
 <tbody>
+ <tr>
+  <td><code>eval()</code></td>
+  <td>A mathematical expression in the form of a character array or a CPP string</td>
+  <td>The result of the expression as a floating point number</td>
+</tr>
 <tr>
   <td><code>makeET()</code></td>
   <td>A mathematical expression in the form of a character array or a CPP string</td>
