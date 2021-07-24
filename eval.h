@@ -26,7 +26,7 @@ double eval(char * expr) {
   deleteET(tree);
   return result;
 }
-#ifdef __cplusplus
+#ifdef CXX
   #include<iostream>
   #include<cstring>
   double eval(std::string expr){
