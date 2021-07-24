@@ -6,7 +6,7 @@
 
 #include<stdio.h>
 #include<malloc.h>
-#include<string.h> //for memcmp() function
+#include<string.h> //for memcmp() and c_str()
 
 void deleteNode(Node * node) {
   if (!node) return; //nothing to delete
@@ -257,7 +257,11 @@ void * makeET(const char * expression) {
   if (root.right) root.right -> parent = NULL;
   return root.right; //the address of the right child of the least precedence '(' node is to be returned
 }
-
+#ifdef CXX
+void * makeET(std::string expr) {
+  return makeET((char *)expr.c_str());
+}
+#endif
 void printNode(const Node * node, int indent) {
   int i;
   char number[20];
