@@ -51,7 +51,7 @@ Any valid combination of the following operators and functions with floating poi
 
 * The comma operator
 
-The comma `,` operator is also implemented. It returns the right-most value that is operates on. 
+The comma `,` operator is also implemented. It returns the value of it's right-most operand. 
 
 e.g; `2,3` would give `3`; `4,3,0` would be equal to `0`; and `cos(PI/2,PI/3,PI)` would return `cos(PI)` i.e, `-1`
 
