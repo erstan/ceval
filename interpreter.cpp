@@ -5,7 +5,7 @@
 int main(int argc, char ** argv) {
   std::string expr;
   while (1) {
-    printf("In = ");
+    std::cout << "In = ";
     std::cin >> expr;
     if (expr == "exit") {
       break;
