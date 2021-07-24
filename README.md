@@ -57,4 +57,37 @@ e.g; `2,3` would give `3`; `4,3,0` would be equal to `0`; and `cos(PI/2,PI/3,PI)
 
 
 
-##### 
+## Usage
+
+Include the path to `eval.h`in your C/C++ file and you are good to go. No cross-compilation required. 
+
+The code snippets given below offer a simple demo of how the `eval()` function can be used to evaluate the result of the a math expression taken from stdin. 
+
+```
+//lang=c
+#include<stdio.h>
+#include "eval.h"
+int main (int argc, char** argv) {
+        char exp[100];
+        printf("Enter the expression\n");
+        scanf("%s", exp);
+        printf("%f\n", eval(exp)); //exp is a char array
+return 0;
+}
+```
+
+```
+//lang=cpp
+#include "eval.h"
+#include<iostream>
+#include<string>
+
+int main(int argc, char ** argv) {
+  std::string expr;
+  std::cout << "Enter the expression\n";
+  std::cin >> expr;
+  std::cout << "Result = " << eval(expr) << "\n"; //expr is cxx string
+return 0;
+}
+  
+```
