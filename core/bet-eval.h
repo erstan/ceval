@@ -29,7 +29,7 @@ double _evaluateET(const Node * node) {
   case POW:
     return pow(left, right); //from math.h
   case FACTORIAL:
-    return factorial(right); //true_gamma(x+1) == factorial(x)
+    return factorial(left); //true_gamma(x+1) == factorial(x)
   case ABS:
     return fabs(right);
   case CEIL:
