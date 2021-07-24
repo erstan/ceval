@@ -6,17 +6,17 @@ A C/C++ library for evaluation of math expressions and breaking them down into p
 <thead><th>Function</th><th>Argument(s)</th><th>Return Value</th></thead>
 <tbody>
 <tr>
-  <td><code>makeET</code></td>
+  <td><code>makeET()</code></td>
   <td>A mathematical expression in the form of a character array or a CPP string</td>
   <td>Returns a void pointer containing the root node address of the parse tree representing the expression</td>
 </tr>
 <tr>
-  <td><code>printET</code></td>
+  <td><code>printET()</code></td>
   <td>The pointer to the root node of the binary expression tree</td>
   <td>The function prints the parse tree with each node properly indented depending on it's location in the tree structure</td>
 </tr>
 <tr>
-  <td><code>evaluateET</code></td>
+  <td><code>evaluateET()</code></td>
   <td>Void pointer to the root node of the parse tree</td>
   <td>The result of the math expression that is represented by the parse tree</td>
 </tr>
@@ -29,7 +29,8 @@ A C/C++ library for evaluation of math expressions and breaking them down into p
 </table>
 
 ## Supported expressions
-Any valid combination of the following operators and functions with floating point numbers as operands can be parsed by <b>ceval</b>. Parenthesis can be used to override the default operator precedences. 
+Any valid combination of the following operators and functions, with floating point numbers as operands can be parsed by <b>ceval</b>. Parenthesis can be used to override the default operator precedences. 
+
 * Arithematic operators
 
 `+` (addition), `-` (subtraction), `*` (multiplication), `/` (division), `%` (modulo), `^` (exponentiation), `\` (quotient), `!` (factorial)
@@ -49,7 +50,7 @@ Any valid combination of the following operators and functions with floating poi
 
 `PI`, `E`
 
-* The comma operator
+* The `,` operator
 
 The comma `,` operator is also implemented. It returns the value of it's right-most operand. 
 
@@ -61,7 +62,7 @@ e.g; `2,3` would give `3`; `4,3,0` would be equal to `0`; and `cos(PI/2,PI/3,PI)
 
 Include the path to `eval.h`in your C/C++ file and you are good to go. No cross-compilation required. 
 
-The code snippets given below offer a simple demo of how the `eval()` function can be used to evaluate the result of the a math expression taken from stdin. 
+The code snippets given below offer a simple demo of how the `eval()` function can be used to evaluate the result of a math expression taken from stdin. 
 
 ```
 //lang=c
