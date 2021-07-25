@@ -97,3 +97,105 @@ return 0;
 }
   
 ```
+
+## Test Run
+This is a test run of `./interpreter.c`. The interpreter takes in an expression and prints out it's result along with it's parse tree. 
+```
+In = 3*7^2
+                2
+        ^
+                7
+*
+        3
+
+Out = 147.000000
+
+
+In = (3.2+2.8)/2
+        2
+/
+                2.80
+        +
+                3.20
+
+Out = 3.000000
+
+
+In = E^PI>PI^E
+                2.72
+        ^
+                3.14
+>
+                3.14
+        ^
+                2.72
+
+Out = 1.000000
+
+
+In = 5.4%2
+        2
+%
+        5.40
+
+Out = 1.400000
+
+
+In = 5.4\2
+        2
+\
+        5.40
+
+Out = 2.000000
+
+
+In = 2*2.0+1.4
+        1.40
++
+                2
+        *
+                2
+
+Out = 5.400000
+
+
+In = (5/4+3*-5)+(sin(PI))^2+(cos(PI))^2
+                2
+        ^
+                        3.14
+                cos
++
+                        2
+                ^
+                                3.14
+                        sin
+        +
+                                        5
+                                -
+                        *
+                                3
+                +
+                                4
+                        /
+                                5
+
+Out = -12.750000
+
+
+In = 3,4,5,6
+        6
+,
+                5
+        ,
+                        4
+                ,
+                        3
+
+Out = 6.000000
+
+
+In = exit
+... Program finished with exit code 0
+
+```
+
