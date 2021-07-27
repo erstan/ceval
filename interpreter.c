@@ -4,7 +4,7 @@
 int main (int argc, char** argv){
 	char exp[100];
 	while(1){
-		printf("In = "); scanf("%s", exp);
+		printf("In = "); getString(exp); 
 		if(!strcmp(exp, "exit")) 
 		        break;
 		void * tree = makeET(exp);
