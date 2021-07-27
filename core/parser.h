@@ -258,8 +258,9 @@ void * makeET(const char * expression) {
   return root.right; //the address of the right child of the least precedence '(' node is to be returned
 }
 #ifdef CXX
+#include<string>
 void * makeET(std::string expr) {
-  return makeET((char *)expr.c_str());
+  return makeET((const char *)expr.c_str());
 }
 #endif
 void printNode(const Node * node, int indent) {
