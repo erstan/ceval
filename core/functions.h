@@ -70,10 +70,12 @@ int areEqual(double a, double b) {
 }
 void getString(char * x) {
   for(char ch = getchar(); ch != '\n'; ch = getchar()) {
+    if(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') {
+	    continue;
+    }
     *x++ = ch;
   }
   *x = '\0';
-  printf("%s", x); 
 }
 #ifdef CXX
 void getString(std::string &x) {
