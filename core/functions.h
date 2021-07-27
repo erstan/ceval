@@ -77,7 +77,7 @@ void getString(char * x) {
 }
 #ifdef CXX
 void getString(std::string &x) {
-  char cArr[x.length()]; 
+  char cArr[100]; 
   getString(cArr); 
   x = cArr;
 }
