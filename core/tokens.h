@@ -1,7 +1,6 @@
 #ifndef TOKENS
 #define TOKENS
 
-
 //various types of tokens
 typedef enum NodeID {
   WHITESPACE,
@@ -141,5 +140,7 @@ typedef struct _Node {
 Node;
 #ifdef __cplusplus
   #define CXX
+  #include<iostream>
+  #include<string>
 #endif
 #endif
