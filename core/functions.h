@@ -1,6 +1,7 @@
 #ifndef FUNCTIONS
 #define FUNCTIONS
 
+#include<stdio.h>
 #include<math.h>
 //pre-defined mathematical constants
 const float CONST_PI = M_PI;
