@@ -1,6 +1,6 @@
 #ifndef FUNCTIONS
 #define FUNCTIONS
-
+#include "./tokens.h"
 #include<stdio.h>
 #include<math.h>
 //pre-defined mathematical constants
@@ -68,4 +68,19 @@ int areEqual(double a, double b) {
     return 0;
   }
 }
+void getString(char * x) {
+  for(char ch = getchar(); ch != '\n'; ch = getchar()) {
+    *x++ = ch;
+  }
+  *x = '\0';
+  printf("%s", x); 
+}
+#ifdef CXX
+void getString(std::string &x) {
+  char cArr[x.length()]; 
+  getString(cArr); 
+  x = cArr;
+}
+#endif
+
 #endif
