@@ -1,103 +1,49 @@
 #ifndef TOKENS
 #define TOKENS
 
-//various types of tokens
-typedef enum NodeID {
+typedef enum ceval_node_id {
   WHITESPACE,
-  OPENPAR,
-  CLOSEPAR, //parentheses
-  COMMA, //comma
-  POSSIGN,
-  NEGSIGN, //positive and negative signs
-  PLUS,
-  MINUS, //additive operators
-  TIMES,
-  DIVIDE,
-  MODULUS,
-  QUOTIENT, //multiplicative operators
-
-  ABS, //absolute
-  POW,
-  EXP, //exponential operators
-  SQRT,
-  CBRT, //square and cube roots
-  LN,
-  LOG, //logarithms
-  CEIL,
-  FLOOR, //ceil and floor
-
-  POWFUN, //power function
-  ATAN2, //polar angle for point (x, y) in cartesian plane = atan2(y,x)
-
-  FACTORIAL, //unary factorial operator
-  SIN,
-  COS,
-  TAN,
-  ARCSIN,
-  ARCCOS,
-  ARCTAN, //trig functions
-  SINH,
-  COSH,
-  TANH, //hyperbolic functions
-
-  LESSER,
-  GREATER,
-  LESSER_S,
-  GREATER_S,
-  EQUAL,
-  NOTEQUAL, //less than, greater than, strictly less than, strictly greater than
-  NUMBER //numbers
-}
-NodeID;
-//their precedences
-const double PREC[] = {
-  0,
-  1,
-  1, //parentheses
-  1.5, //comma operator
-  3,
-  3, //positive and negative signs
-  2,
-  2, //additive operators
-  4,
-  4,
-  4,
-  4, //multiplicative operators
-
-  5, //absolute value
-  5,
-  5, //exponential operator
-  5,
-  5, //square and cube roots
-  5,
-  5, //logarithms
-  5,
-  5, //ceil and floor
-
-  5, //power function
-  5, //atan2()
-
-  6, //factorial
-  7,
-  7,
-  7,
-  7,
-  7,
-  7, //trig functions
-  7,
-  7,
-  7, //hyperbolic functions
-
-  1.2,
-  1.2,
-  1.2,
-  1.2,
-  1.1,
-  1.1, //relational operations are performed at the end
-  10 //numbers
+  OPENPAR, CLOSEPAR,
+  COMMA,
+  POSSIGN, NEGSIGN,
+  PLUS, MINUS, 
+  TIMES, DIVIDE, MODULUS, QUOTIENT,
+  ABS, POW, EXP, SQRT, CBRT, LN, LOG, CEIL, FLOOR, POWFUN, ATAN2,
+  FACTORIAL,
+  SIN, COS, TAN, ARCSIN, ARCCOS, ARCTAN, SINH, COSH, TANH,
+  LESSER, GREATER, LESSER_S, GREATER_S,
+  EQUAL, NOTEQUAL,
+  NUMBER
+}ceval_node_id;
+const char * ceval_token_symbol[] = {
+  " ",
+  "(", ")",
+  ",",
+  "+", "-",
+  "+", "-",
+  "*", "/", "%", "\\",
+  "abs", "^", "exp", "sqrt", "cbrt", "ln", "log", "ceil", "floor", "pow", "atan2",
+  "!",
+  "sin", "cos", "tan", "asin", "acos", "atan", "sinh", "cosh", "tanh",
+  "<=", ">=", "<", ">", 
+  "==", "!=",
+  " "
 };
-//only for single char tokens
-NodeID TOKEN_ID(char token) {
+const double ceval_precedence[] = {
+  0,
+  1, 1,
+  1.5,
+  3, 3, 
+  2, 2, 
+  4, 4, 4, 4, 
+  5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+  6,
+  7, 7, 7, 7, 7, 7, 7, 7, 7,
+  1.2, 1.2, 1.2, 1.2,
+  1.1, 1.1,
+  10
+};
+ceval_node_id TOKEN_ID(char token) {
   switch (token) {
   case '(':
     return OPENPAR;
@@ -131,13 +77,13 @@ NodeID TOKEN_ID(char token) {
   }
   return OPENPAR;
 }
-typedef struct _Node {
-  enum NodeID ID;
+typedef struct _ceval_node {
+  enum ceval_node_id id;
   double pre;
-  double number; //only to be used if this.ID == NUMBER
-  struct _Node * left, * right, * parent;
+  double number;
+  struct _ceval_node * left, * right, * parent;
 }
-Node;
+ceval_node;
 #ifdef __cplusplus
   #define CXX
   #include<iostream>
