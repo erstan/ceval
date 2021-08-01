@@ -46,18 +46,23 @@ The comma `,` operator is also implemented. It returns the value of it's right-m
 
 e.g; `2,3` would give `3`; `4,3,0` would be equal to `0`; and `cos(PI/2,PI/3,PI)` would return `cos(PI)` i.e, `-1`
 
-# Usage
-* `ceval_result()` takes in an arithmetic expression as argument and returns the result as a `double`. The argument could be a character array terminated by `\0` or a CPP string. 
-* `ceval_tree()` takes in the arithmetic expression as argument and prints out it's parse tree on the console. 
+## Installation
+```shell
+git clone https://github.com/e-t-sudo/ceval.git /tmp/ceval && cd /tmp/ceval
+sudo make install
+```
 
-Following is an interactive console based interpreter that interactively takes in math expressions from stdin, and prints out their parse trees and results. 
+## Usage
+After the installation, just include the ceval library using `#include<ceval/ceval.h>` directive in your C/C++ project. 
+
+The code snippet given below is a console based interpreter that interactively takes in math expressions from stdin, and prints out their parse trees and results. 
 
 ```
 //lang=c
 #include<stdio.h>
 #include<stdlib.h>
 
-#include "ceval.h"
+#include<ceval/ceval.h>
 
 int main(int argc, char ** argv) {
   char expr[100];
@@ -77,6 +82,7 @@ int main(int argc, char ** argv) {
   return 0;
 }
 ```
+
 ## Test Run
 ```
 In = 3*7^2
