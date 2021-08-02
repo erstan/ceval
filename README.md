@@ -68,7 +68,7 @@ int main(int argc, char ** argv) {
   char expr[100];
   while (1) {
     printf("In = ");
-    scanf("%s", expr);
+    fgets(expr, 100, stdin);
     if (!strcmp(expr, "exit")) {
       break;
     } else if (!strcmp(expr, "clear")) {
