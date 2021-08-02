@@ -98,7 +98,7 @@ char * ceval_shrink(char * x) {
   char * y = x;
   int len = 0;
   for (int i = 0; i < strlen(x); i++) {
-    if (x[i] == ' ' || x[i] == '\t') {
+    if (x[i] != ' ' || x[i] != '\t') {
       *(y + len) = x[i];
       len++;
     } else {
