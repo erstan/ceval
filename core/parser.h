@@ -60,8 +60,9 @@ ceval_node * insert_node(ceval_node * current, ceval_node item, int isRightAssoc
   return current;
 }
 
-void * ceval_make_tree(const char * expression) {
+void * ceval_make_tree(char * expression) {
   if (expression == NULL) return NULL;
+  strcpy(expression, ceval_shrink(expression));
   ceval_node root = {
     OPENPAR,
     ceval_precedence[OPENPAR],
@@ -99,7 +100,8 @@ void * ceval_make_tree(const char * expression) {
     } else if (c == '+' || c == '-' || 
       c == '*' || c == '/' || c == '%' || c == '\\' ||
       c == '^' ||
-      (c == '!' && * (expression) != '=') ||
+      (c == '!' && * (expression) != '=') || 
+      (c == '!' && * (expression) == '=' && * (expression + 1) == '=') ||
       (c == '<' && * (expression) != '=') ||
       (c == '>' && * (expression) != '=') ||
       c == ',') {
