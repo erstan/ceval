@@ -81,19 +81,8 @@ int are_equal(double a, double b) {
     return 0;
   }
 }
-void ceval_input(char * x) {
-  for (char ch = getchar(); ch != '\n'; ch = getchar()) {
-    if (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') {
-      continue;
-    }
-    * x++ = ch;
-  }
-  * x = '\0';
-}
-
 #include<string.h>
 #include<ctype.h>
-
 char * ceval_shrink(char * x) {
   char * y = x;
   int len = 0;
@@ -108,12 +97,4 @@ char * ceval_shrink(char * x) {
   y[len] = '\0';
   return y;
 }
-#ifdef CXX
-void ceval_input(std::string & x) {
-  char char_array[100];
-  ceval_input(char_array);
-  x = char_array;
-}
-#endif
-
 #endif
