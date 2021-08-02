@@ -18,7 +18,6 @@ double ceval_result(char * expr) {
 }
 void ceval_tree(char * expr) {
   void * tree = ceval_make_tree(expr);
-  double result = ceval_evaluate_tree(tree);
   #ifdef CEVAL_ERROR
       printf("Error encountered\n");
       #undef CEVAL_ERROR

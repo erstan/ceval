@@ -55,17 +55,23 @@ double _ceval_evaluate_tree(const ceval_node * node) {
   case TANH:
     return tanh(right);
   case SIN:
-    return sin(right);
+    return ceval_sin(right);
   case COS:
-    return cos(right);
+    return ceval_cos(right);
   case TAN:
-    return tan(right);
+    return ceval_tan(right);
   case ARCSIN:
     return ceval_asin(right);
   case ARCCOS:
     return ceval_acos(right);
   case ARCTAN:
     return ceval_atan(right);
+  case DEG2RAD:
+    return ceval_deg2rad(right);
+  case RAD2DEG:
+    return ceval_rad2deg(right);
+  case SIGNUM:
+    return ceval_signum(right);
   case COMMA:
     return right;
   case LESSER:
@@ -77,9 +83,9 @@ double _ceval_evaluate_tree(const ceval_node * node) {
   case GREATER_S:
     return left > right;
   case EQUAL:
-    return are_equal(left, right);
+    return ceval_are_equal(left, right);
   case NOTEQUAL:
-    return !are_equal(left, right);
+    return !ceval_are_equal(left, right);
   default:
     return node -> number;
   }

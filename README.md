@@ -30,7 +30,7 @@ Any valid combination of the following operators and functions, with floating po
 
 * Single-argument functions
 
-`exp()`, `sqrt()`, `cbrt()`, `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `sinh()`, `cosh()`, `tanh()`, `abs()`, `ceil()`, `floor()`, `log()`, `ln()`
+`exp()`, `sqrt()`, `cbrt()`, `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `sinh()`, `cosh()`, `tanh()`, `abs()`, `ceil()`, `floor()`, `log()`, `ln()`, `deg2rad()`, `rad2deg()`, `signum()`
 
 * Two-argument functions
 

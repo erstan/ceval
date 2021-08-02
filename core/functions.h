@@ -1,10 +1,28 @@
 #ifndef FUNCTIONS
 #define FUNCTIONS
+
 #include "./tokens.h"
+
 #include<stdio.h>
+
 #include<math.h>
+
 const float CONST_PI = M_PI;
 const float CONST_E = M_E;
+#ifndef EPSILON
+  #define EPSILON 1e-2
+#endif
+#ifndef DELTA
+  #define DELTA 1e-6
+#endif
+//these can be defined by the user before the include directive depending the desired level of precision
+
+
+double ceval_signum(double x) {
+  return (x==0)?0:
+          (x>0)?1:
+          -1;
+}
 double ceval_sum(double a, double b) {
   return a + b;
 }
@@ -74,8 +92,33 @@ double ceval_acos(double x) {
 double ceval_atan(double x) {
   return atan(x);
 }
-int are_equal(double a, double b) {
-  if (fabs(a - b) <= 0.0001) {
+double ceval_sin(double x) {
+  double sin_val = sin(x);
+  //sin(pi) == 0.000000, but sin(pi-EPSILON) == -0.00000* and sin(pi+EPSILON) == +0.00000*
+  //since the precision of pi (approx) is limited, it often leads to -0.0000 printed out as a result
+  //thus, we assumse 0.0000 value for all |sin(x)|<=EPSILON
+  return (fabs(sin_val) <= EPSILON) ? 0 : sin_val;
+}
+double ceval_cos(double x) {
+  double cos_val = cos(x);
+  return (fabs(cos_val) <= EPSILON) ? 0 : cos_val;
+}
+double ceval_tan(double x) {
+  double tan_val = tan(x);
+  if(ceval_modulus(x - CONST_PI/2,CONST_PI)<=DELTA && x/(CONST_PI/2)) {
+    printf("tan() is not defined for odd-integral multiples of pi/2\n");
+    return NAN;
+  }
+  return (fabs(tan_val) <= EPSILON) ? 0 : tan_val;
+}
+double ceval_rad2deg(double x) {
+  return x / CONST_PI * 180;
+}
+double ceval_deg2rad(double x) {
+  return x / 180 * CONST_PI;
+}
+int ceval_are_equal(double a, double b) {
+  if (fabs(a - b) <= EPSILON) {
     return 1;
   } else {
     return 0;
@@ -88,7 +131,7 @@ char * ceval_shrink(char * x) {
   int len = 0;
   for (int i = 0; i < strlen(x); i++) {
     if (x[i] != ' ' || x[i] != '\t') {
-      *(y + len) = x[i];
+      *(y + len) = tolower(x[i]);
       len++;
     } else {
       continue;

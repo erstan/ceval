@@ -11,6 +11,8 @@ typedef enum ceval_node_id {
   ABS, POW, EXP, SQRT, CBRT, LN, LOG, CEIL, FLOOR, POWFUN, ATAN2,
   FACTORIAL,
   SIN, COS, TAN, ARCSIN, ARCCOS, ARCTAN, SINH, COSH, TANH,
+  DEG2RAD, RAD2DEG,
+  SIGNUM,
   LESSER, GREATER, LESSER_S, GREATER_S,
   EQUAL, NOTEQUAL,
   NUMBER
@@ -25,6 +27,8 @@ const char * ceval_token_symbol[] = {
   "abs", "^", "exp", "sqrt", "cbrt", "ln", "log", "ceil", "floor", "pow", "atan2",
   "!",
   "sin", "cos", "tan", "asin", "acos", "atan", "sinh", "cosh", "tanh",
+  "deg2rad", "rad2deg", 
+  "SIGNUM",
   "<=", ">=", "<", ">", 
   "==", "!=",
   " "
@@ -39,6 +43,8 @@ const double ceval_precedence[] = {
   5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
   6,
   7, 7, 7, 7, 7, 7, 7, 7, 7,
+  7, 7,
+  7,
   1.2, 1.2, 1.2, 1.2,
   1.1, 1.1,
   10

@@ -120,12 +120,12 @@ void * ceval_make_tree(char * expression) {
           return NULL;
         }
       }
-    } else if (!memcmp(expression - 1, "PI", 2)) {
+    } else if (!memcmp(expression - 1, "pi", 2)) {
       expression = expression + (2 - 1);
       node.id = NUMBER;
       node.pre = ceval_precedence[node.id];
       node.number = CONST_PI;
-    } else if (!memcmp(expression - 1, "E", 1)) {
+    } else if (!memcmp(expression - 1, "e", 1)) {
       expression = expression + (1 - 1);
       node.id = NUMBER;
       node.pre = ceval_precedence[node.id];
@@ -206,6 +206,18 @@ void * ceval_make_tree(char * expression) {
       expression = expression + (4 - 1);
       node.id = ARCTAN;
       node.pre = ceval_precedence[node.id];
+    } else if (!memcmp(expression - 1, "deg2rad", 7)) {
+      expression = expression + (7 - 1);
+      node.id = DEG2RAD;
+      node.pre = ceval_precedence[node.id];
+    } else if (!memcmp(expression - 1, "rad2deg", 7)) {
+      expression = expression + (7 - 1);
+      node.id = RAD2DEG;
+      node.pre = ceval_precedence[node.id];
+    } else if (!memcmp(expression - 1, "signum", 6)) {
+      expression = expression + (6 - 1);
+      node.id = SIGNUM;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "<=", 2)) {
       expression = expression + (2 - 1);
       node.id = LESSER;
@@ -246,7 +258,7 @@ void print_node(const ceval_node * node, int indent) {
   if (!node) return;
   print_node(node -> right, indent + 4);
   if(node->id == NUMBER) {
-    if ((long) node -> number == node -> number)
+    if ((long) node -> number == node -> number) //for integers, skip the trailing zeroes
       sprintf(number, "%.0f", node -> number);
     else sprintf(number, "%.2f", node -> number);
     str = number;
