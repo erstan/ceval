@@ -69,9 +69,9 @@ int main(int argc, char ** argv) {
   while (1) {
     printf("In = ");
     fgets(expr, 100, stdin);
-    if (!strcmp(expr, "exit")) {
+    if (!strcmp(expr, "exit\n")) {
       break;
-    } else if (!strcmp(expr, "clear")) {
+    } else if (!strcmp(expr, "clear\n")) {
       system("clear");
       continue;
     } else {
