@@ -58,14 +58,14 @@ double ceval_quotient(double a, double b) {
   return (a - ceval_modulus(a, b)) / b;
 }
 double ceval_asin(double x) {
-  if(x>1||x<-1) {
+  if (x > 1 || x < -1) {
     printf("[PARSER]: Numerical argument out of domain\n");
     return 0;
   }
   return asin(x);
 }
 double ceval_acos(double x) {
-  if(x>1||x<-1) {
+  if (x > 1 || x < -1) {
     printf("[PARSER]: Numerical argument out of domain\n");
     return 0;
   }
@@ -75,25 +75,42 @@ double ceval_atan(double x) {
   return atan(x);
 }
 int are_equal(double a, double b) {
-  if (fabs(a - b) != 0.0001) {
+  if (fabs(a - b) <= 0.0001) {
     return 1;
   } else {
     return 0;
   }
 }
 void ceval_input(char * x) {
-  for(char ch = getchar(); ch != '\n'; ch = getchar()) {
-    if(ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') {
-	    continue;
+  for (char ch = getchar(); ch != '\n'; ch = getchar()) {
+    if (ch == ' ' || ch == '\t' || ch == '\r' || ch == '\b') {
+      continue;
     }
-    *x++ = ch;
+    * x++ = ch;
   }
-  *x = '\0';
+  * x = '\0';
+}#include<string.h>
+
+#include<ctype.h>
+
+char * ceval_shrink(char * x) {
+  char * y = x;
+  int len = 0;
+  for (int i = 0; i < strlen(x); i++) {
+    if (x[i] == ' ' || x[i] == '\t') {
+      *(y + len) = x[i];
+      len++;
+    } else {
+      continue;
+    }
+  }
+  y[len] = '\0';
+  return y;
 }
 #ifdef CXX
-void ceval_input(std::string &x) {
-  char char_array[100]; 
-  ceval_input(char_array); 
+void ceval_input(std::string & x) {
+  char char_array[100];
+  ceval_input(char_array);
   x = char_array;
 }
 #endif
