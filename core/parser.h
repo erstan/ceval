@@ -6,74 +6,51 @@
 
 #include<stdio.h>
 #include<malloc.h>
-#include<string.h> //for memcmp() and c_str()
+#include<string.h>
 
-void deleteNode(Node * node) {
-  if (!node) return; //nothing to delete
-  deleteNode(node -> left); //delete left node
-  deleteNode(node -> right); //delete right node
-  free(node); //delete the parent
+void delete_node(ceval_node * node) {
+  if (!node) return;
+  delete_node(node -> left);
+  delete_node(node -> right);
+  free(node);
 }
-void deleteET(void * tree) {
-  deleteNode((Node * ) tree); //start recursive deletetion from the root node
+void ceval_delete_tree(void * tree) {
+  delete_node((ceval_node * ) tree);
 }
-Node * insertNode(Node * current, Node item, int isRightAssoc) {
-  if (item.ID != OPENPAR && //Operations enclosed by open/close parentheses need to be resolved before everything else, hence, the tree is not climbed
-    item.ID != NEGSIGN && //negation is similar to OPENPAR. -Exp == -(Exp)
-    item.ID != POSSIGN) {
+ceval_node * insert_node(ceval_node * current, ceval_node item, int isRightAssoc) {
+  if (item.id != OPENPAR &&
+    item.id != NEGSIGN &&
+    item.id != POSSIGN) {
     if (isRightAssoc) {
       while (current -> pre > item.pre) {
-        current = current -> parent; //for right assoc operators, climb up the tree until the PREC[current] <= PREC[new_node]
+        current = current -> parent;
       }
     } else {
       while (current -> pre >= item.pre) {
-        current = current -> parent; //for left assoc operators, climb up the tree until the PREC[current] < PREC[new_node]
+        current = current -> parent;
       }
     }
   }
-  //   .         *** ADDITION OF A CLOSEPAR ***             .
-  //    .                                                    .
-  //     \                                                    \              
-  //     parent                                              parent                                                    
-  //       /\                                                  /\                                                           
-  //      /  \                                                /  \                                    
-  //    left  (        +      )             ====>         left  subtree_under_OPENPAR            
-  //           \                                                             
-  //            \                                                            
-  //   subtree_under_OPENPAR
-  if (item.ID == CLOSEPAR) { 
-    //do not add the close parenthesis in the tree, just remove it's paired open counterpart
-    //current has climbed to the OPENPAR that is to be removed
-    //current->parent is the parent of the OPENPAR node
-    //current->right is the subtree_under_OPENPAR
-    Node * parentOfOPENPAR = current -> parent;
-    parentOfOPENPAR -> right = current -> right; //join parent with subtree_under_OPENPAR
-    if (current -> right) current -> right -> parent = parentOfOPENPAR; //join the subtree_under_OPENPAR with the parent
-    free(current); //remove (
-    current = parentOfOPENPAR;
+  if (item.id == CLOSEPAR) { 
+    ceval_node * parent_of_openpar = current -> parent;
+    parent_of_openpar -> right = current -> right;
+    if (current -> right) current -> right -> parent = parent_of_openpar;
+    free(current);
+    current = parent_of_openpar;
 
-    if (current -> right -> ID == COMMA && (current -> ID == POWFUN || current -> ID == ATAN2)) {  // if the right child is a comma and the node itself is a pow() function
-      Node * addressOfCOMMA = current -> right;
-      parentOfOPENPAR -> left = addressOfCOMMA -> left;
-      addressOfCOMMA -> left -> parent = parentOfOPENPAR;
-      parentOfOPENPAR -> right = addressOfCOMMA -> right;
-      addressOfCOMMA -> right -> parent = parentOfOPENPAR;
-      free(addressOfCOMMA); //remove ',' node
+    if (current -> right -> id == COMMA && (current -> id == POWFUN || current -> id == ATAN2)) {
+      ceval_node * address_of_comma = current -> right;
+      parent_of_openpar -> left = address_of_comma -> left;
+      address_of_comma -> left -> parent = parent_of_openpar;
+      parent_of_openpar -> right = address_of_comma -> right;
+      address_of_comma -> right -> parent = parent_of_openpar;
+      free(address_of_comma);
     }
     return current;
   }
-  Node * newnode = (Node * ) malloc(sizeof(Node));
-  //create new node
+  ceval_node * newnode = (ceval_node * ) malloc(sizeof(ceval_node));
   * newnode = item;
   newnode -> right = NULL;
-  //                    *** ADDITION OF A NEW NODE ***
-  //     current                                                      current
-  //       /\                                                           /\
-  //      /  \         +          newnode           ====>              /  \      
-  // left  right                                                left    newnode
-  //                                                                       /\
-  //                                                                      /  \
-  //                                                                   right  NULL
 
   newnode -> left = current -> right;
   if (current -> right) current -> right -> parent = newnode;
@@ -82,35 +59,32 @@ Node * insertNode(Node * current, Node item, int isRightAssoc) {
   current = newnode;
   return current;
 }
-void * makeET(const char * expression) {
-  if (expression == NULL) return NULL;
 
-  //initialize the tree with the least precedence root node '('
-  Node root = {
+void * ceval_make_tree(char * expression) {
+  if (expression == NULL) return NULL;
+  strcpy(expression, ceval_shrink(expression));
+  ceval_node root = {
     OPENPAR,
-    PREC[OPENPAR],
+    ceval_precedence[OPENPAR],
     0,
     NULL,
     NULL,
     NULL
   };
-  NodeID previousID = OPENPAR;
-  Node * current = & root;
+  ceval_node_id previous_id = OPENPAR;
+  ceval_node * current = & root;
   int isRightAssoc = 0;
   while (1) {
-    Node node;
-    char c = * expression++; /* get latest character of string */
-    isRightAssoc = (c == '^' || c == ')') ? 1 : 0; //close parenthesis is given right associativity because it needs to climb up to it's paired counterpart while the tree is climbed
-    // string ends 
+    ceval_node node;
+    char c = * expression++; 
+    isRightAssoc = (c == '^' || c == ')') ? 1 : 0; 
     if (c == '\0') break;
-    // whitespaces are to be ignored
     else if (TOKEN_ID(c) == WHITESPACE) continue;
-    // deal with a multidigit number
     else if (c == '(' || c == ')') {
-      node.ID = TOKEN_ID(c);
-      node.pre = PREC[node.ID];
+      node.id = TOKEN_ID(c);
+      node.pre = ceval_precedence[node.id];
     } else if (TOKEN_ID(c) == NUMBER) {
-      node.pre = PREC[NUMBER];
+      node.pre = ceval_precedence[NUMBER];
       int i;
       char number[15];
       for (i = 0; i + 1 < sizeof(number);) {
@@ -121,23 +95,26 @@ void * makeET(const char * expression) {
         else break;
       }
       number[i] = '\0';
-      sscanf(number, "%lf", & node.number); //sscanf() scans the char array `number` and formats it into a numeric double type and stores the result at &node.number
-      node.ID = NUMBER;
-    } else if (c == '+' || c == '-' || c == '*' || c == '/' || c == '%' || c == '\\' || c == '^' || //fundamental operations
-      (c == '!' && * (expression) != '=') ||
+      sscanf(number, "%lf", & node.number);
+      node.id = NUMBER;
+    } else if (c == '+' || c == '-' || 
+      c == '*' || c == '/' || c == '%' || c == '\\' ||
+      c == '^' ||
+      (c == '!' && * (expression) != '=') || 
+      (c == '!' && * (expression) == '=' && * (expression + 1) == '=') ||
       (c == '<' && * (expression) != '=') ||
-      (c == '>' && * (expression) != '=') || //!, <, > should not be followed by = sign
+      (c == '>' && * (expression) != '=') ||
       c == ',') {
-      if (previousID == NUMBER || previousID == CLOSEPAR || previousID == FACTORIAL) {
-        node.ID = TOKEN_ID(c);
-        node.pre = PREC[node.ID];
+      if (previous_id == NUMBER || previous_id == CLOSEPAR || previous_id == FACTORIAL) {
+        node.id = TOKEN_ID(c);
+        node.pre = ceval_precedence[node.id];
       } else {
-        if (c == '-') { //a negation
-          node.ID = NEGSIGN;
-          node.pre = PREC[node.ID];
-        } else if (c == '+') { //a positive sign
-          node.ID = POSSIGN;
-          node.pre = PREC[node.ID];
+        if (c == '-') {
+          node.id = NEGSIGN;
+          node.pre = ceval_precedence[node.id];
+        } else if (c == '+') {
+          node.id = POSSIGN;
+          node.pre = ceval_precedence[node.id];
         } else {
           printf("[PARSER]: Misplaced '%c' sign\n", c);
           return NULL;
@@ -145,263 +122,147 @@ void * makeET(const char * expression) {
       }
     } else if (!memcmp(expression - 1, "PI", 2)) {
       expression = expression + (2 - 1);
-      node.ID = NUMBER;
-      node.pre = PREC[node.ID];
+      node.id = NUMBER;
+      node.pre = ceval_precedence[node.id];
       node.number = CONST_PI;
     } else if (!memcmp(expression - 1, "E", 1)) {
       expression = expression + (1 - 1);
-      node.ID = NUMBER;
-      node.pre = PREC[node.ID];
+      node.id = NUMBER;
+      node.pre = ceval_precedence[node.id];
       node.number = CONST_E;
     } else if (!memcmp(expression - 1, "abs", 3)) {
       expression = expression + (3 - 1);
-      node.ID = ABS;
-      node.pre = PREC[node.ID];
+      node.id = ABS;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "sqrt", 4)) {
       expression = expression + (4 - 1);
-      node.ID = SQRT;
-      node.pre = PREC[node.ID];
+      node.id = SQRT;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "cbrt", 4)) {
       expression = expression + (4 - 1);
-      node.ID = CBRT;
-      node.pre = PREC[node.ID];
+      node.id = CBRT;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "ceil", 4)) {
       expression = expression + (4 - 1);
-      node.ID = CEIL;
-      node.pre = PREC[node.ID];
+      node.id = CEIL;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "floor", 5)) {
       expression = expression + (5 - 1);
-      node.ID = FLOOR;
-      node.pre = PREC[node.ID];
+      node.id = FLOOR;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "pow", 3)) {
       expression = expression + (3 - 1);
-      node.ID = POWFUN;
-      node.pre = PREC[node.ID];
+      node.id = POWFUN;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "atan2", 5)) {
       expression = expression + (5 - 1);
-      node.ID = ATAN2;
-      node.pre = PREC[node.ID];
+      node.id = ATAN2;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "exp", 3)) {
       expression = expression + (3 - 1);
-      node.ID = EXP;
-      node.pre = PREC[node.ID];
+      node.id = EXP;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "ln", 2)) {
       expression = expression + (2 - 1);
-      node.ID = LN;
-      node.pre = PREC[node.ID];
+      node.id = LN;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "log", 3)) {
       expression = expression + (3 - 1);
-      node.ID = LOG;
-      node.pre = PREC[node.ID];
+      node.id = LOG;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "sinh", 4)) {
       expression = expression + (4 - 1);
-      node.ID = SINH;
-      node.pre = PREC[node.ID];
+      node.id = SINH;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "cosh", 4)) {
       expression = expression + (4 - 1);
-      node.ID = COSH;
-      node.pre = PREC[node.ID];
+      node.id = COSH;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "tanh", 4)) {
       expression = expression + (4 - 1);
-      node.ID = TANH;
-      node.pre = PREC[node.ID];
+      node.id = TANH;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "sin", 3)) {
       expression = expression + (3 - 1);
-      node.ID = SIN;
-      node.pre = PREC[node.ID];
+      node.id = SIN;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "cos", 3)) {
       expression = expression + (3 - 1);
-      node.ID = COS;
-      node.pre = PREC[node.ID];
+      node.id = COS;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "tan", 3)) {
       expression = expression + (3 - 1);
-      node.ID = TAN;
-      node.pre = PREC[node.ID];
+      node.id = TAN;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "asin", 4)) {
       expression = expression + (4 - 1);
-      node.ID = ARCSIN;
-      node.pre = PREC[node.ID];
+      node.id = ARCSIN;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "acos", 4)) {
       expression = expression + (4 - 1);
-      node.ID = ARCCOS;
-      node.pre = PREC[node.ID];
+      node.id = ARCCOS;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "atan", 4)) {
       expression = expression + (4 - 1);
-      node.ID = ARCTAN;
-      node.pre = PREC[node.ID];
+      node.id = ARCTAN;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "<=", 2)) {
       expression = expression + (2 - 1);
-      node.ID = LESSER;
-      node.pre = PREC[node.ID];
+      node.id = LESSER;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, ">=", 2)) {
       expression = expression + (2 - 1);
-      node.ID = GREATER;
-      node.pre = PREC[node.ID];
+      node.id = GREATER;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "==", 2)) {
       expression = expression + (2 - 1);
-      node.ID = EQUAL;
-      node.pre = PREC[node.ID];
+      node.id = EQUAL;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "!=", 2)) {
       expression = expression + (2 - 1);
-      node.ID = NOTEQUAL;
-      node.pre = PREC[node.ID];
+      node.id = NOTEQUAL;
+      node.pre = ceval_precedence[node.id];
     } else {
       printf("[PARSER]: Unknown token '%c'.\n", c);
-      deleteET(root.right);
+      ceval_delete_tree(root.right);
       root.right = NULL;
       break;
     }
-    previousID = node.ID;
-    current = insertNode(current, node, isRightAssoc);
+    previous_id = node.id;
+    current = insert_node(current, node, isRightAssoc);
   }
   if (root.right) root.right -> parent = NULL;
-  return root.right; //the address of the right child of the least precedence '(' node is to be returned
+  return root.right;
 }
 #ifdef CXX
-void * makeET(std::string expr) {
-  return makeET((const char *)expr.c_str());
+void * ceval_make_tree(std::string expr) {
+  return ceval_make_tree((const char *)expr.c_str());
 }
 #endif
-void printNode(const Node * node, int indent) {
+void print_node(const ceval_node * node, int indent) {
   int i;
   char number[20];
   const char * str;
   if (!node) return;
-  printNode(node -> right, indent + 4); //print the right subtree indented four-spaces away from the it's parent node
-  switch (node -> ID) {
-  case NUMBER:
+  print_node(node -> right, indent + 4);
+  if(node->id == NUMBER) {
     if ((long) node -> number == node -> number)
       sprintf(number, "%.0f", node -> number);
     else sprintf(number, "%.2f", node -> number);
     str = number;
-    break;
-  case OPENPAR:
-    str = "(";
-    break;
-  case CLOSEPAR:
-    str = ")";
-    break;
-  case PLUS:
-    str = "+";
-    break;
-  case MINUS:
-    str = "-";
-    break;
-  case NEGSIGN:
-    str = "-";
-    break;
-  case POSSIGN:
-    str = "+";
-    break;
-  case TIMES:
-    str = "*";
-    break;
-  case DIVIDE:
-    str = "/";
-    break;
-  case MODULUS:
-    str = "%";
-    break;
-  case QUOTIENT:
-    str = "\\";
-    break;
-  case POW:
-    str = "^";
-    break;
-  case FACTORIAL:
-    str = "!";
-    break;
-  case ABS:
-    str = "abs";
-    break;
-  case CEIL:
-    str = "ceil";
-    break;
-  case FLOOR:
-    str = "floor";
-    break;
-  case EXP:
-    str = "exp";
-    break;
-  case POWFUN:
-    str = "pow";
-    break;
-  case ATAN2:
-    str = "atan2";
-    break;
-  case LN:
-    str = "ln";
-    break;
-  case LOG:
-    str = "log";
-    break;
-  case SQRT:
-    str = "sqrt";
-    break;
-  case CBRT:
-    str = "cbrt";
-    break;
-  case SINH:
-    str = "sinh";
-    break;
-  case COSH:
-    str = "cosh";
-    break;
-  case TANH:
-    str = "tanh";
-    break;
-  case SIN:
-    str = "sin";
-    break;
-  case COS:
-    str = "cos";
-    break;
-  case TAN:
-    str = "tan";
-    break;
-  case ARCSIN:
-    str = "asin";
-    break;
-  case ARCCOS:
-    str = "acos";
-    break;
-  case ARCTAN:
-    str = "atan";
-    break;
-  case COMMA:
-    str = ",";
-    break;
-  case LESSER:
-    str = "<=";
-    break;
-  case GREATER:
-    str = ">=";
-    break;
-  case LESSER_S:
-    str = "<";
-    break;
-  case GREATER_S:
-    str = ">";
-    break;
-  case EQUAL:
-    str = "==";
-    break;
-  case NOTEQUAL:
-    str = "!=";
-    break;
-  default:
-    str = "[PARSER]: Error!";
+  }else{
+    str = ceval_token_symbol[node->id];
   }
   for (i = 0; i < indent; i++) {
     putchar(' ');
-    putchar(' '); //increase indentation 
+    putchar(' ');
   }
-  puts(str); //print a the parent node
-  printNode(node -> left, indent + 4); //print the left subtree indented four spaces away from it's parent node
+  puts(str);
+  print_node(node -> left, indent + 4);
 }
 
-void printET(const void * tree) {
-  printNode((const Node * ) tree, 0);
+void ceval_print_tree(const void * tree) {
+  print_node((const ceval_node * ) tree, 0);
 }
 
 #endif

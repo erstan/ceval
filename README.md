@@ -1,34 +1,19 @@
 # ceval
-A C/C++ library for evaluation of math expressions and breaking them down into parse trees
+A C/C++ header for parsing and evaluation of arithmetic expressions.
 
 ## Functions accessibe from main()
 <table>
 <thead><th>Function</th><th>Argument(s)</th><th>Return Value</th></thead>
 <tbody>
  <tr>
-  <td><code>eval()</code></td>
+  <td><code>ceval_result()</code></td>
   <td>A mathematical expression in the form of a character array or a CPP string</td>
   <td>The result of the expression as a floating point number</td>
 </tr>
 <tr>
-  <td><code>makeET()</code></td>
+  <td><code>ceval_tree()</code></td>
   <td>A mathematical expression in the form of a character array or a CPP string</td>
-  <td>Returns a void pointer containing the root node address of the parse tree representing the expression</td>
-</tr>
-<tr>
-  <td><code>printET()</code></td>
-  <td>The pointer to the root node of the binary expression tree</td>
   <td>The function prints the parse tree with each node properly indented depending on it's location in the tree structure</td>
-</tr>
-<tr>
-  <td><code>evaluateET()</code></td>
-  <td>Void pointer to the root node of the parse tree</td>
-  <td>The result of the math expression that is represented by the parse tree</td>
-</tr>
-<tr>
-  <td><code>deleteET()</code></td>
-  <td>The pointer containing the root node address of the expression tree</td>
-  <td>Recursively frees the memory occupied by each node of the expression tree</td>
 </tr>
 </tbody>
 </table>
@@ -41,11 +26,11 @@ Any valid combination of the following operators and functions, with floating po
 `+` (addition), `-` (subtraction), `*` (multiplication), `/` (division), `%` (modulo), `^` (exponentiation), `\` (quotient), `!` (factorial)
 * Relational operators
 
-`==`, `!=`, `<`, `>`, `<=`, `>=` to compare the results of two expressions
+`==` (equal), `!=` (not equal), `<` (strictly less), `>` (strictly greater), `<=` (less or equal), `>=` (greater or equal) to compare the results of two expressions
 
 * Single-argument functions
 
-`exp()`, `sqrt()`, `cbrt()`, `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `sinh()`, `cosh()`, `tanh()`, `abs()`, `ceil()`, `floor`, `log()`, `ln()`
+`exp()`, `sqrt()`, `cbrt()`, `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `sinh()`, `cosh()`, `tanh()`, `abs()`, `ceil()`, `floor()`, `log()`, `ln()`
 
 * Two-argument functions
 
@@ -61,45 +46,44 @@ The comma `,` operator is also implemented. It returns the value of it's right-m
 
 e.g; `2,3` would give `3`; `4,3,0` would be equal to `0`; and `cos(PI/2,PI/3,PI)` would return `cos(PI)` i.e, `-1`
 
-
+## Installation
+```shell
+git clone https://github.com/e-t-sudo/ceval.git /tmp/ceval && cd /tmp/ceval
+sudo make install
+```
 
 ## Usage
+After the installation, just include the ceval library using `#include<ceval/ceval.h>` directive in your C/C++ project. 
 
-Include the path to `eval.h`in your C/C++ file and you are good to go. No cross-compilation required. 
-
-The code snippets given below offer a simple demo of how the `eval()` function can be used to evaluate the result of a math expression taken from stdin. 
+The code snippet given below is a console based interpreter that interactively takes in math expressions from stdin, and prints out their parse trees and results. 
 
 ```
 //lang=c
 #include<stdio.h>
-#include "eval.h"
-int main (int argc, char** argv) {
-        char exp[100];
-        printf("Enter the expression\n");
-        scanf("%s", exp);
-        printf("%f\n", eval(exp)); //exp is a char array
-return 0;
-}
-```
+#include<stdlib.h>
 
-```
-//lang=cpp
-#include "eval.h"
-#include<iostream>
-#include<string>
+#include<ceval/ceval.h>
 
 int main(int argc, char ** argv) {
-  std::string expr;
-  std::cout << "Enter the expression\n";
-  std::cin >> expr;
-  std::cout << "Result = " << eval(expr) << "\n"; //expr is cxx string
-return 0;
+  char expr[100];
+  while (1) {
+    printf("In = ");
+    fgets(expr, 100, stdin);
+    if (!strcmp(expr, "exit\n")) {
+      break;
+    } else if (!strcmp(expr, "clear\n")) {
+      system("clear");
+      continue;
+    } else {
+      ceval_tree(expr);
+      printf("\nOut = %f\n\n", ceval_result(expr));
+    }
+  }
+  return 0;
 }
-  
 ```
 
 ## Test Run
-This is a test run of `./interpreter.c`. The interpreter takes in an expression and prints out it's result along with it's parse tree. 
 ```
 In = 3*7^2
                 2
@@ -198,4 +182,3 @@ In = exit
 ... Program finished with exit code 0
 
 ```
-
