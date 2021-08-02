@@ -265,11 +265,6 @@ void * ceval_make_tree(char * expression) {
   if (root.right) root.right -> parent = NULL;
   return root.right;
 }
-#ifdef CXX
-void * ceval_make_tree(std::string expr) {
-  return ceval_make_tree((const char *)expr.c_str());
-}
-#endif
 void print_node(const ceval_node * node, int indent) {
   int i;
   char number[20];
