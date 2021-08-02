@@ -1,0 +1,8 @@
+{
+  "name": "ceval",
+  "version": "0.0.1",
+  "repo": "e-t-sudo/ceval",
+  "description": "Library for expression parsing and evaluation",
+  "keywords": ["interpreter", "math", "parser", "parse", "tree", "eval"],
+  "license": "MIT"
+}

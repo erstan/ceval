@@ -128,6 +128,10 @@ void * ceval_make_tree(char * expression) {
       node.id = NUMBER;
       node.pre = ceval_precedence[node.id];
       node.number = CONST_PI;
+    } else if (!memcmp(expression - 1, "exp", 3)) {
+      expression = expression + (3 - 1);
+      node.id = EXP;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "e", 1)) {
       expression = expression + (1 - 1);
       node.id = NUMBER;
@@ -160,10 +164,6 @@ void * ceval_make_tree(char * expression) {
     } else if (!memcmp(expression - 1, "atan2", 5)) {
       expression = expression + (5 - 1);
       node.id = ATAN2;
-      node.pre = ceval_precedence[node.id];
-    } else if (!memcmp(expression - 1, "exp", 3)) {
-      expression = expression + (3 - 1);
-      node.id = EXP;
       node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "ln", 2)) {
       expression = expression + (2 - 1);
