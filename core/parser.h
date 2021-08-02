@@ -119,7 +119,7 @@ void * ceval_make_tree(char * expression) {
           node.id = POSSIGN;
           node.pre = ceval_precedence[node.id];
         } else {
-          printf("[PARSER]: Misplaced '%c' sign\n", c);
+          printf("[ceval]: Misplaced '%c' sign\n", c);
           return NULL;
         }
       }
@@ -254,7 +254,7 @@ void * ceval_make_tree(char * expression) {
       node.id = NOTEQUAL;
       node.pre = ceval_precedence[node.id];
     } else {
-      printf("[PARSER]: Unknown token '%c'.\n", c);
+      printf("[ceval]: Unknown token '%c'.\n", c);
       ceval_delete_tree(root.right);
       root.right = NULL;
       break;
