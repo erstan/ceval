@@ -89,8 +89,9 @@ void ceval_input(char * x) {
     * x++ = ch;
   }
   * x = '\0';
-}#include<string.h>
+}
 
+#include<string.h>
 #include<ctype.h>
 
 char * ceval_shrink(char * x) {
