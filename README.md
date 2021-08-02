@@ -30,11 +30,11 @@ Any valid combination of the following operators and functions, with floating po
 
 * Single-argument functions
 
-`exp()`, `sqrt()`, `cbrt()`, `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `sinh()`, `cosh()`, `tanh()`, `abs()`, `ceil()`, `floor()`, `log()`, `ln()`, `deg2rad()`, `rad2deg()`, `signum()`
+`exp()`, `sqrt()`, `cbrt()`, `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `sinh()`, `cosh()`, `tanh()`, `abs()`, `ceil()`, `floor()`, `log10()`, `ln()`, `deg2rad()`, `rad2deg()`, `signum()`
 
 * Two-argument functions
 
-`pow()`, `atan2()`
+`pow()`, `atan2()`, `gcd()`, `hcf()`, `lcm()`, `log()` (generalized log(b, x) to any base `b`)
 
 * Pre-defined math constants
 

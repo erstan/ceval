@@ -40,14 +40,46 @@ double _ceval_evaluate_tree(const ceval_node * node) {
     return pow(left, right);
   case ATAN2:
     return atan2(left, right);
+  case GCD:
+    if(node->left == NULL) {
+      return ceval_gcd(left, right, -1);
+    } else if (node->right == NULL) {
+      return ceval_gcd(left, right, 1);
+    } else {
+      return ceval_gcd(left, right, 0);
+    }
+  case HCF:
+    if(node->left == NULL) {
+      return ceval_hcf(left, right, -1);
+    } else if (node->right == NULL) {
+      return ceval_hcf(left, right, 1);
+    } else {
+      return ceval_hcf(left, right, 0);
+    }
+  case LCM:
+    if(node->left == NULL) {
+      return ceval_lcm(left, right, -1);
+    } else if (node->right == NULL) {
+      return ceval_lcm(left, right, 1);
+    } else {
+      return ceval_lcm(left, right, 0);
+    }
+  case LOG:
+    if(node->left == NULL) {
+      return ceval_log(left, right, -1);
+    } else if (node->right == NULL) {
+      return ceval_log(left, right, 1);
+    } else {
+      return ceval_log(left, right, 0);
+    }
   case SQRT:
     return sqrt(right);
   case CBRT:
     return cbrt(right);
   case LN:
-    return log(right);
-  case LOG:
-    return log10(right);
+    return ceval_log(CONST_E, right, 0);
+  case LOG10:
+    return ceval_log(10, right, 0);
   case SINH:
     return sinh(right);
   case COSH:

@@ -7,6 +7,9 @@
 
 #include<math.h>
 
+#include<string.h>
+#include<ctype.h>
+
 const float CONST_PI = M_PI;
 const float CONST_E = M_E;
 #ifndef EPSILON
@@ -17,6 +20,9 @@ const float CONST_E = M_E;
 #endif
 //these can be defined by the user before the include directive depending the desired level of precision
 
+void ceval_error(const char * error) {
+  if (strcmp(error, "")) printf("\n[ceval]: %s\n", error);
+}
 
 double ceval_signum(double x) {
   return (x==0)?0:
@@ -34,12 +40,12 @@ double ceval_prod(double a, double b) {
 }
 double ceval_div(double a, double b) {
   if (b == 0 && a == 0) {
-    printf("[PARSER]: 0/0 is indeterminate...\n");
-    printf("[PARSER]: Continuing evaluation with the assumption 0/0 = 1\n");
+    ceval_error("0/0 is indeterminate...");
+    ceval_error("Continuing evaluation with the assumption 0/0 = 1");
     return 1;
   } else if (b == 0) {
-    printf("[PARSER]: Division by 0 is not defined...\n");
-    printf("[PARSER]: Continuing evaluation with the assumption 1/0 = inf\n");
+    ceval_error("Division by 0 is not defined...");
+    ceval_error("Continuing evaluation with the assumption 1/0 = inf");
     return a * INFINITY;
   }
   return a / b;
@@ -49,8 +55,8 @@ double ceval_factorial(double x) {
 }
 double ceval_modulus(double a, double b) {
   if (b == 0) {
-    printf("[PARSER]: Division by 0 is not defined...\n");
-    printf("[PARSER]: Continuing evaluation with the assumption 1%0 = 0\n");
+    ceval_error("Division by 0 is not defined...");
+    ceval_error("Continuing evaluation with the assumption 1%0 = 0");
     return 0;
   }
   return fmod(a, b);
@@ -59,27 +65,27 @@ double ceval_quotient(double a, double b) {
   //a = b*q + r
   //q = (a - r)/b
   if (b == 0 && a == 0) {
-    printf("[PARSER]: 0/0 is indeterminate...\n");
-    printf("[PARSER]: Continuing evaluation with the assumption 0/0 = 1\n");
+    ceval_error("0/0 is indeterminate...");
+    ceval_error("Continuing evaluation with the assumption 0/0 = 1");
     return 1;
 
   } else if (b == 0) {
-    printf("[PARSER]: Division by 0 is not defined...\n");
-    printf("[PARSER]: Continuing evaluation with the assumption 1/0 = inf\n");
+    ceval_error("Division by 0 is not defined...");
+    ceval_error("Continuing evaluation with the assumption 1/0 = inf");
     return a * INFINITY;
   }
   return (a - ceval_modulus(a, b)) / b;
 }
 double ceval_asin(double x) {
   if (x > 1 || x < -1) {
-    printf("[PARSER]: Numerical argument out of domain\n");
+    ceval_error("Numerical argument out of domain");
     return 0;
   }
   return asin(x);
 }
 double ceval_acos(double x) {
   if (x > 1 || x < -1) {
-    printf("[PARSER]: Numerical argument out of domain\n");
+    ceval_error("Numerical argument out of domain");
     return 0;
   }
   return acos(x);
@@ -101,7 +107,7 @@ double ceval_cos(double x) {
 double ceval_tan(double x) {
   double tan_val = tan(x);
   if(abs(ceval_modulus(x - CONST_PI/2, CONST_PI)) <= DELTA) {
-    printf("tan() is not defined for odd-integral multiples of pi/2\n");
+    ceval_error("tan() is not defined for odd-integral multiples of pi/2");
     return NAN;
   }
   return (fabs(tan_val) <= EPSILON) ? 0 : tan_val;
@@ -112,6 +118,61 @@ double ceval_rad2deg(double x) {
 double ceval_deg2rad(double x) {
   return x / 180 * CONST_PI;
 }
+int ceval_gcd_binary (int a, int b) {
+  if(a == 0 && b == 0) 
+    return 0;
+  while(b) 
+    b ^= a ^= b ^= a %= b;
+return a;
+}
+double ceval_gcd(double a, double b, int arg_check) {
+  if (arg_check) {
+    ceval_error("gcd() expects two arguments");
+    return NAN;
+  }
+  double a_i, a_f, b_i, b_f;
+  a_f = modf(a, &a_i); 
+  b_f = modf(b, &b_i);
+  a_i = fabs(a_i); 
+  b_i = fabs(b_i);
+  if(a_f == 0 && b_f == 0) {
+    int x = floor(a_i);
+    int y = floor(b_i);
+    return (double) ceval_gcd_binary(x, y);
+  } else {
+    ceval_error("gcd() takes only integral parameters");
+    return NAN;
+  }
+}
+double ceval_hcf(double a, double b, int arg_check) {
+  if (arg_check) {
+    ceval_error("hcf() expects two arguments");
+    return NAN;
+  }
+  return ceval_gcd(a, b, 0);
+}
+double ceval_lcm(double a, double b, int arg_check) {
+  if (arg_check) {
+    ceval_error("lcm() expects two arguments");
+    return NAN;
+  }
+  return a * b / ceval_gcd(a, b, 0);
+}
+double ceval_log(double b, double x, int arg_check) {
+  if (arg_check) {
+    ceval_error("log expects two arguments");
+    return NAN;
+  }
+  if(b == 0) {
+    if(x == 0) {
+      ceval_error("log(0,0) is indeterminate");
+      return NAN;
+    } else {
+      return 0;
+    }
+  }
+  return log(x) / log(b);
+}
 int ceval_are_equal(double a, double b) {
   if (fabs(a - b) <= EPSILON) {
     return 1;
@@ -119,8 +180,6 @@ int ceval_are_equal(double a, double b) {
     return 0;
   }
 }
-#include<string.h>
-#include<ctype.h>
 char * ceval_shrink(char * x) {
   char * y = x;
   int len = 0;

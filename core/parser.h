@@ -38,7 +38,10 @@ ceval_node * insert_node(ceval_node * current, ceval_node item, int isRightAssoc
     free(current);
     current = parent_of_openpar;
 
-    if (current -> right -> id == COMMA && (current -> id == POWFUN || current -> id == ATAN2)) {
+    if (current -> right -> id == COMMA && 
+       (current -> id == POWFUN || current -> id == ATAN2 || 
+        current -> id == GCD || current -> id == HCF || current -> id == LCM ||
+        current -> id == LOG)) {
       ceval_node * address_of_comma = current -> right;
       parent_of_openpar -> left = address_of_comma -> left;
       address_of_comma -> left -> parent = parent_of_openpar;
@@ -166,6 +169,10 @@ void * ceval_make_tree(char * expression) {
       expression = expression + (2 - 1);
       node.id = LN;
       node.pre = ceval_precedence[node.id];
+    } else if (!memcmp(expression - 1, "log10", 5)) {
+      expression = expression + (5 - 1);
+      node.id = LOG10;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "log", 3)) {
       expression = expression + (3 - 1);
       node.id = LOG;
@@ -217,6 +224,18 @@ void * ceval_make_tree(char * expression) {
     } else if (!memcmp(expression - 1, "signum", 6)) {
       expression = expression + (6 - 1);
       node.id = SIGNUM;
+      node.pre = ceval_precedence[node.id];
+    } else if (!memcmp(expression - 1, "gcd", 3)) {
+      expression = expression + (3 - 1);
+      node.id = GCD;
+      node.pre = ceval_precedence[node.id];
+    } else if (!memcmp(expression - 1, "hcf", 3)) {
+      expression = expression + (3 - 1);
+      node.id = HCF;
+      node.pre = ceval_precedence[node.id];
+    } else if (!memcmp(expression - 1, "lcm", 3)) {
+      expression = expression + (3 - 1);
+      node.id = LCM;
       node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "<=", 2)) {
       expression = expression + (2 - 1);
