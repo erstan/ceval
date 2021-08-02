@@ -53,12 +53,7 @@ double ceval_modulus(double a, double b) {
     printf("[PARSER]: Continuing evaluation with the assumption 1%0 = 0\n");
     return 0;
   }
-  while (1) {
-    if (a < b) {
-      return a;
-    }
-    a = a - b;
-  }
+  return fmod(a, b);
 }
 double ceval_quotient(double a, double b) {
   //a = b*q + r
@@ -105,7 +100,7 @@ double ceval_cos(double x) {
 }
 double ceval_tan(double x) {
   double tan_val = tan(x);
-  if(ceval_modulus(x - CONST_PI/2,CONST_PI)<=DELTA && x/(CONST_PI/2)) {
+  if(abs(ceval_modulus(x - CONST_PI/2, CONST_PI)) <= DELTA) {
     printf("tan() is not defined for odd-integral multiples of pi/2\n");
     return NAN;
   }
