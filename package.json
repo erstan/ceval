@@ -1,8 +1,27 @@
 {
   "name": "ceval",
-  "version": "0.0.1",
-  "repo": "e-t-sudo/ceval",
-  "description": "Library for expression parsing and evaluation",
-  "keywords": ["interpreter", "math", "parser", "parse", "tree", "eval"],
-  "license": "MIT"
+  "version": "1.0.0",
+  "description": "A C/C++ library for parsing and evaluation of arithematic expressions",
+  "main": "ceval.h",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/e-t-sudo/ceval.git"
+  },
+  "keywords": [
+    "c",
+    "calculator",
+    "math",
+    "interpreter",
+    "parser",
+    "eval"
+  ],
+  "author": "Ershad Tantry",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/e-t-sudo/ceval/issues"
+  },
+  "homepage": "https://github.com/e-t-sudo/ceval#readme"
 }
