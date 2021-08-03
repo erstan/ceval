@@ -30,7 +30,7 @@ Any valid combination of the following operators and functions, with floating po
 
 * Single-argument functions
 
-`exp()`, `sqrt()`, `cbrt()`, `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `sinh()`, `cosh()`, `tanh()`, `abs()`, `ceil()`, `floor()`, `log10()`, `ln()`, `deg2rad()`, `rad2deg()`, `signum()`
+`exp()`, `sqrt()`, `cbrt()`, `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `sinh()`, `cosh()`, `tanh()`, `abs()`, `ceil()`, `floor()`, `log10()`, `ln()`, `deg2rad()`, `rad2deg()`, `signum()`, `int()`, `frac()`
 
 * Two-argument functions
 
@@ -177,6 +177,69 @@ In = 3,4,5,6
                         3
 
 Out = 6.000000
+
+
+In = tanh(2/3)==(sinh(2/3)/cosh(2/3))
+                                3
+                        /
+                                2
+                cosh
+        /
+                                3
+                        /
+                                2
+                sinh
+==
+                        3
+                /
+                        2
+        tanh
+
+Out = 1.000000
+
+
+In = (2+3/3+(3+9.7))
+                9.70
+        +
+                3
++
+                        3
+                /
+                        3
+        +
+                2
+
+Out = 15.700000
+
+
+In = sin(pi/2)+cos(pi/2)+tan(pi/2)
+                        2
+                /
+                        3.14
+        tan
++
+                                2
+                        /
+                                3.14
+                cos
+        +
+                                2
+                        /
+                                3.14
+                sin
+
+[ceval]: tan() is not defined for odd-integral multiples of pi/2
+
+Out = nan
+
+
+In = asin(2)
+        2
+asin
+
+[ceval]: Numerical argument out of domain
+
+Out = nan
 
 
 In = exit

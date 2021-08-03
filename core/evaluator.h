@@ -8,116 +8,40 @@ double _ceval_evaluate_tree(const ceval_node * node) {
   left = _ceval_evaluate_tree(node -> left);
   right = _ceval_evaluate_tree(node -> right);
   switch (node -> id) {
-  case PLUS:
-    return ceval_sum(left, right);
-  case MINUS:
-    return ceval_diff(left, right);
-  case NEGSIGN:
-    return -right;
-  case POSSIGN:
-    return right;
-  case TIMES:
-    return ceval_prod(left, right);
-  case DIVIDE:
-    return ceval_div(left, right);
-  case MODULUS:
-    return ceval_modulus(left, right);
-  case QUOTIENT:
-    return ceval_quotient(left, right);
-  case POW:
-    return pow(left, right);
-  case FACTORIAL:
-    return ceval_factorial(left);
-  case ABS:
-    return fabs(right);
-  case CEIL:
-    return ceil(right);
-  case FLOOR:
-    return floor(right);
-  case EXP:
-    return pow(CONST_E, right);
-  case POWFUN:
-    return pow(left, right);
-  case ATAN2:
-    return atan2(left, right);
-  case GCD:
+  
+  //unary operators/functions
+  case NEGSIGN: case POSSIGN:
+  case EXP: case LN: case LOG10:
+  case ABS: case CEIL: case FLOOR:
+  case SQRT: case CBRT:
+  case SIN: case COS: case TAN: 
+  case ARCSIN: case ARCCOS: case ARCTAN:
+  case SINH: case COSH: case TANH:
+  case DEG2RAD: case RAD2DEG:
+  case SIGNUM: case INT: case FRAC: case FACTORIAL:
     if(node->left == NULL) {
-      return ceval_gcd(left, right, -1);
-    } else if (node->right == NULL) {
-      return ceval_gcd(left, right, 1);
-    } else {
-      return ceval_gcd(left, right, 0);
+      //operate on right operand
+      return (*single_arg_fun[node->id])(right);
+    } else if(node->right == NULL) { 
+      //operate on left operand(e.g; factorial())
+      return (*single_arg_fun[node->id])(left);
     }
-  case HCF:
-    if(node->left == NULL) {
-      return ceval_hcf(left, right, -1);
-    } else if (node->right == NULL) {
-      return ceval_hcf(left, right, 1);
-    } else {
-      return ceval_hcf(left, right, 0);
-    }
-  case LCM:
-    if(node->left == NULL) {
-      return ceval_lcm(left, right, -1);
-    } else if (node->right == NULL) {
-      return ceval_lcm(left, right, 1);
-    } else {
-      return ceval_lcm(left, right, 0);
-    }
-  case LOG:
-    if(node->left == NULL) {
-      return ceval_log(left, right, -1);
-    } else if (node->right == NULL) {
-      return ceval_log(left, right, 1);
-    } else {
-      return ceval_log(left, right, 0);
-    }
-  case SQRT:
-    return sqrt(right);
-  case CBRT:
-    return cbrt(right);
-  case LN:
-    return ceval_log(CONST_E, right, 0);
-  case LOG10:
-    return ceval_log(10, right, 0);
-  case SINH:
-    return sinh(right);
-  case COSH:
-    return cosh(right);
-  case TANH:
-    return tanh(right);
-  case SIN:
-    return ceval_sin(right);
-  case COS:
-    return ceval_cos(right);
-  case TAN:
-    return ceval_tan(right);
-  case ARCSIN:
-    return ceval_asin(right);
-  case ARCCOS:
-    return ceval_acos(right);
-  case ARCTAN:
-    return ceval_atan(right);
-  case DEG2RAD:
-    return ceval_deg2rad(right);
-  case RAD2DEG:
-    return ceval_rad2deg(right);
-  case SIGNUM:
-    return ceval_signum(right);
+  
+  //binary operators/functions
+  case PLUS: case MINUS:
+  case TIMES: case DIVIDE: case MODULUS: case QUOTIENT:
+  case POW: case POWFUN:
+  case ATAN2: case GCD: case HCF: case LCM: case LOG:
+  case LESSER: case LESSER_S: case GREATER: case GREATER_S:
+  case EQUAL: case NOTEQUAL:
   case COMMA:
-    return right;
-  case LESSER:
-    return left <= right;
-  case GREATER:
-    return left >= right;
-  case LESSER_S:
-    return left < right;
-  case GREATER_S:
-    return left > right;
-  case EQUAL:
-    return ceval_are_equal(left, right);
-  case NOTEQUAL:
-    return !ceval_are_equal(left, right);
+    if(node->left == NULL) {
+      return (*double_arg_fun[node->id])(left, right, -1);
+    } else if (node->right == NULL) {
+      return (*double_arg_fun[node->id])(left, right, 1);
+    } else {
+      return (*double_arg_fun[node->id])(left, right, 0);
+    }
   default:
     return node -> number;
   }

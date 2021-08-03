@@ -237,6 +237,14 @@ void * ceval_make_tree(char * expression) {
       expression = expression + (3 - 1);
       node.id = LCM;
       node.pre = ceval_precedence[node.id];
+    } else if (!memcmp(expression - 1, "int", 3)) {
+      expression = expression + (3 - 1);
+      node.id = INT;
+      node.pre = ceval_precedence[node.id];
+    } else if (!memcmp(expression - 1, "frac", 4)) {
+      expression = expression + (4 - 1);
+      node.id = FRAC;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "<=", 2)) {
       expression = expression + (2 - 1);
       node.id = LESSER;
