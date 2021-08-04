@@ -1,5 +1,5 @@
-#ifndef FUNCTIONS
-#define FUNCTIONS
+#ifndef CEVAL_FUNCTIONS
+#define CEVAL_FUNCTIONS
 
 #include "./tokens.h"
 
@@ -10,8 +10,9 @@
 #include<string.h>
 #include<ctype.h>
 
-const float CONST_PI = M_PI;
-const float CONST_E = M_E;
+//constant definitions
+const float CEVAL_CONST_PI = M_PI;
+const float CEVAL_CONST_E = M_E;
 #ifndef EPSILON
   #define EPSILON 1e-2
 #endif
@@ -20,31 +21,10 @@ const float CONST_E = M_E;
 #endif
 //these can be defined by the user before the include directive depending the desired level of precision
 
-//helper functions
-void ceval_error(const char * error) {
-  if (strcmp(error, "")) printf("\n[ceval]: %s\n", error);
-}
-double ceval_gcd_binary (int a, int b) {
-  if(a == 0 && b == 0) 
-    return 0;
-  while(b) 
-    b ^= a ^= b ^= a %= b;
-return a;
-}
-char * ceval_shrink(char * x) {
-  char * y = x;
-  int len = 0;
-  for (int i = 0; i < strlen(x); i++) {
-    if (x[i] != ' ' || x[i] != '\t') {
-      *(y + len) = tolower(x[i]);
-      len++;
-    } else {
-      continue;
-    }
-  }
-  y[len] = '\0';
-  return y;
-}
+//helper function prototypes
+void ceval_error(const char *);
+double ceval_gcd_binary(int, int);
+char * ceval_shrink(char *);
 
 //single argument funtion prototypes
 double ceval_signum(double);
@@ -95,22 +75,33 @@ double ceval_comma(double, double, int);
 double ceval_power(double, double, int);
 double ceval_atan2(double, double, int);
 
-double (*double_arg_fun[]) (double, double, int) = {
-  NULL,
-  NULL, NULL,
-  ceval_comma,
-  NULL, NULL,
-  ceval_sum, ceval_diff,
-  ceval_prod, ceval_div, ceval_modulus, ceval_quotient,
-  NULL, ceval_power, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ceval_power, ceval_atan2, ceval_gcd, ceval_hcf, ceval_lcm, ceval_log, NULL, NULL, 
-  NULL,
-  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
-  NULL, NULL, 
-  NULL, 
-  ceval_lesser, ceval_greater, ceval_lesser_s, ceval_greater_s,
-  ceval_are_equal, ceval_not_equal,
-  NULL
-};
+//helper function definitions
+void ceval_error(const char * error) {
+  if (strcmp(error, "")) printf("\n[ceval]: %s\n", error);
+}
+double ceval_gcd_binary (int a, int b) {
+  if(a == 0 && b == 0) 
+    return 0;
+  while(b) 
+    b ^= a ^= b ^= a %= b;
+return a;
+}
+char * ceval_shrink(char * x) {
+  char * y = x;
+  int len = 0;
+  for (int i = 0; i < strlen(x); i++) {
+    if (x[i] != ' ' || x[i] != '\t') {
+      *(y + len) = tolower(x[i]);
+      len++;
+    } else {
+      continue;
+    }
+  }
+  y[len] = '\0';
+  return y;
+}
+
+//single argument function definitions
 double (*single_arg_fun[]) (double) = {
   NULL,
   NULL, NULL,
@@ -127,8 +118,6 @@ double (*single_arg_fun[]) (double) = {
   NULL, NULL,
   NULL
 };
-
-//single argument function definitions
 double ceval_signum(double x) {
   return (x==0)?0:
           (x>0)?1:
@@ -164,17 +153,17 @@ double ceval_cos(double x) {
 }
 double ceval_tan(double x) {
   double tan_val = tan(x);
-  if(abs(ceval_modulus(x - CONST_PI/2, CONST_PI, 0)) <= DELTA) {
+  if(abs(ceval_modulus(x - CEVAL_CONST_PI/2, CEVAL_CONST_PI, 0)) <= DELTA) {
     ceval_error("tan() is not defined for odd-integral multiples of pi/2");
     return NAN;
   }
   return (fabs(tan_val) <= EPSILON) ? 0 : tan_val;
 }
 double ceval_rad2deg(double x) {
-  return x / CONST_PI * 180;
+  return x / CEVAL_CONST_PI * 180;
 }
 double ceval_deg2rad(double x) {
-  return x / 180 * CONST_PI;
+  return x / 180 * CEVAL_CONST_PI;
 }
 double ceval_int_part(double x) {
   double x_i, x_f;
@@ -190,10 +179,10 @@ double ceval_log10(double x) {
   return ceval_log(10, x, 0);
 }
 double ceval_ln(double x) {
-  return ceval_log(CONST_E, x, 0);
+  return ceval_log(CEVAL_CONST_E, x, 0);
 }
 double ceval_exp(double x) {
-  return ceval_power(CONST_E, x, 0);
+  return ceval_power(CEVAL_CONST_E, x, 0);
 }
 double ceval_factorial(double x) {
   return tgamma(x + 1);
@@ -232,7 +221,23 @@ double ceval_tanh(double x) {
 }
 
 //double argument function definitions
-
+//double argument function definitions
+double (*double_arg_fun[]) (double, double, int) = {
+  NULL,
+  NULL, NULL,
+  ceval_comma,
+  NULL, NULL,
+  ceval_sum, ceval_diff,
+  ceval_prod, ceval_div, ceval_modulus, ceval_quotient,
+  NULL, ceval_power, NULL, NULL, NULL, NULL, NULL, NULL, NULL, ceval_power, ceval_atan2, ceval_gcd, ceval_hcf, ceval_lcm, ceval_log, NULL, NULL, 
+  NULL,
+  NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
+  NULL, NULL, 
+  NULL, 
+  ceval_lesser, ceval_greater, ceval_lesser_s, ceval_greater_s,
+  ceval_are_equal, ceval_not_equal,
+  NULL
+};
 double ceval_sum(double a, double b, int arg_check) {
   return a + b;
 }
@@ -368,7 +373,6 @@ double ceval_greater_s(double a, double b, int arg_check) {
   }
   return !ceval_lesser(a, b, 0);
 }
-
 double ceval_comma(double x, double y, int arg_check) {
   if (arg_check) {
     ceval_error(",: too few arguments provided");

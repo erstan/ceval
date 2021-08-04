@@ -1,21 +1,21 @@
-#ifndef TOKENS
-#define TOKENS
+#ifndef CEVAL_TOKENS
+#define CEVAL_TOKENS
 
 typedef enum ceval_node_id {
-  WHITESPACE,
-  OPENPAR, CLOSEPAR,
-  COMMA,
-  POSSIGN, NEGSIGN,
-  PLUS, MINUS, 
-  TIMES, DIVIDE, MODULUS, QUOTIENT,
-  ABS, POW, EXP, SQRT, CBRT, LN, LOG10, CEIL, FLOOR, POWFUN, ATAN2, GCD, HCF, LCM, LOG, INT, FRAC,
-  FACTORIAL,
-  SIN, COS, TAN, ARCSIN, ARCCOS, ARCTAN, SINH, COSH, TANH,
-  DEG2RAD, RAD2DEG,
-  SIGNUM,
-  LESSER, GREATER, LESSER_S, GREATER_S,
-  EQUAL, NOTEQUAL,
-  NUMBER
+  CEVAL_WHITESPACE,
+  CEVAL_OPENPAR, CEVAL_CLOSEPAR,
+  CEVAL_COMMA,
+  CEVAL_POSSIGN, CEVAL_NEGSIGN,
+  CEVAL_PLUS, CEVAL_MINUS, 
+  CEVAL_TIMES, CEVAL_DIVIDE, CEVAL_MODULO, CEVAL_QUOTIENT,
+  CEVAL_ABS, CEVAL_POW, CEVAL_EXP, CEVAL_SQRT, CEVAL_CBRT, CEVAL_LN, CEVAL_LOG10, CEVAL_CEIL, CEVAL_FLOOR, CEVAL_POWFUN, CEVAL_ATAN2, CEVAL_GCD, CEVAL_HCF, CEVAL_LCM, CEVAL_LOG, CEVAL_INT, CEVAL_FRAC,
+  CEVAL_FACTORIAL,
+  CEVAL_SIN, CEVAL_COS, CEVAL_TAN, CEVAL_ASIN, CEVAL_ACOS, CEVAL_ATAN, CEVAL_SINH, CEVAL_COSH, CEVAL_TANH,
+  CEVAL_DEG2RAD, CEVAL_RAD2DEG,
+  CEVAL_SIGNUM,
+  CEVAL_LESSER, CEVAL_GREATER, CEVAL_LESSER_S, CEVAL_GREATER_S,
+  CEVAL_EQUAL, CEVAL_NOTEQUAL,
+  CEVAL_NUMBER
 }ceval_node_id;
 const char * ceval_token_symbol[] = {
   " ",
@@ -28,7 +28,7 @@ const char * ceval_token_symbol[] = {
   "!",
   "sin", "cos", "tan", "asin", "acos", "atan", "sinh", "cosh", "tanh",
   "deg2rad", "rad2deg", 
-  "SIGNUM",
+  "signum",
   "<=", ">=", "<", ">", 
   "==", "!=",
   " "
@@ -49,49 +49,48 @@ const double ceval_precedence[] = {
   1.1, 1.1,
   10
 };
-ceval_node_id TOKEN_ID(char token) {
+ceval_node_id ceval_singlechar_token_id(char token) {
   switch (token) {
   case '(':
-    return OPENPAR;
+    return CEVAL_OPENPAR;
   case ')':
-    return CLOSEPAR;
+    return CEVAL_CLOSEPAR;
   case '+':
-    return PLUS;
+    return CEVAL_PLUS;
   case '-':
-    return MINUS;
+    return CEVAL_MINUS;
   case '*':
-    return TIMES;
+    return CEVAL_TIMES;
   case '/':
-    return DIVIDE;
+    return CEVAL_DIVIDE;
   case '%':
-    return MODULUS;
+    return CEVAL_MODULO;
   case '\\':
-    return QUOTIENT;
+    return CEVAL_QUOTIENT;
   case '^':
-    return POW;
+    return CEVAL_POW;
   case '!':
-    return FACTORIAL;
+    return CEVAL_FACTORIAL;
   case ',':
-    return COMMA;
+    return CEVAL_COMMA;
   case '<':
-    return LESSER_S;
+    return CEVAL_LESSER_S;
   case '>':
-    return GREATER_S;
+    return CEVAL_GREATER_S;
   default:
-    if ('0' <= token && token <= '9') return NUMBER;
-    else if (token == ' ' || token == '\t' || token == '\r' || token == '\n') return WHITESPACE;
+    if ('0' <= token && token <= '9') return CEVAL_NUMBER;
+    else if (token == ' ' || token == '\t' || token == '\r' || token == '\n') return CEVAL_WHITESPACE;
   }
-  return OPENPAR;
+  return CEVAL_OPENPAR;
 }
-typedef struct _ceval_node {
+typedef struct ceval_node {
   enum ceval_node_id id;
   double pre;
   double number;
-  struct _ceval_node * left, * right, * parent;
-}
-ceval_node;
+  struct ceval_node * left, * right, * parent;
+} ceval_node;
 #ifdef __cplusplus
-  #define CXX
+  #define CEVAL_CXX
   #include<iostream>
   #include<string>
 #endif

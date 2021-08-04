@@ -1,5 +1,5 @@
-#ifndef EVAL
-#define EVAL
+#ifndef CEVAL
+#define CEVAL
 #include "./core/parser.h"
 #include "./core/evaluator.h"
 //functions accessible from main() 
