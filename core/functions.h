@@ -4,9 +4,7 @@
 #include "./tokens.h"
 
 #include<stdio.h>
-
 #include<math.h>
-
 #include<string.h>
 #include<ctype.h>
 
@@ -101,7 +99,6 @@ char * ceval_shrink(char * x) {
   y[len] = '\0';
   return y;
 }
-
 //single argument function definitions
 double (*single_arg_fun[]) (double) = {
   NULL,
@@ -186,6 +183,10 @@ double ceval_exp(double x) {
   return ceval_power(CEVAL_CONST_E, x, 0);
 }
 double ceval_factorial(double x) {
+  if(x<0){
+    ceval_error("Numerical argument out of domain");
+    return NAN;
+  }
   return tgamma(x + 1);
 }
 double ceval_positive_sign(double x) {

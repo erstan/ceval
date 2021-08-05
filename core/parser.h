@@ -75,7 +75,7 @@ void * ceval_make_tree(char * expression) {
   strcpy(expression, ceval_shrink(expression));
   ceval_node root = {
     CEVAL_OPENPAR,
-    ceval_precedence[CEVAL_OPENPAR],
+    ceval_token_prec(CEVAL_OPENPAR),
     0,
     NULL,
     NULL,
@@ -92,9 +92,9 @@ void * ceval_make_tree(char * expression) {
     else if (ceval_singlechar_token_id(c) == CEVAL_WHITESPACE) continue;
     else if (c == '(' || c == ')') {
       node.id = ceval_singlechar_token_id(c);
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (ceval_singlechar_token_id(c) == CEVAL_NUMBER) {
-      node.pre = ceval_precedence[CEVAL_NUMBER];
+      node.pre = ceval_token_prec(CEVAL_NUMBER);
       int i;
       char number[15];
       for (i = 0; i + 1 < sizeof(number);) {
@@ -110,168 +110,194 @@ void * ceval_make_tree(char * expression) {
     } else if (c == '+' || c == '-' || 
       c == '*' || c == '/' || c == '%' || c == '\\' ||
       c == '^' ||
-      (c == '!' && * (expression) != '=') || 
       (c == '!' && * (expression) == '=' && * (expression + 1) == '=') ||
       (c == '<' && * (expression) != '=') ||
       (c == '>' && * (expression) != '=') ||
-      c == ',') {
+      c == ',' ||
+      c == 'e') {
       if (previous_id == CEVAL_NUMBER || previous_id == CEVAL_CLOSEPAR || previous_id == CEVAL_FACTORIAL) {
         node.id = ceval_singlechar_token_id(c);
-        node.pre = ceval_precedence[node.id];
-      } else {
+        node.pre = ceval_token_prec(node.id);
+      } else { 
+        //other tokens (other than CEVAL_NUMBER, CEVAL_CLOSEPAR, CEVAL_FACTORIAL) are allowed only before '+'s or '-'s
         if (c == '-') {
           node.id = CEVAL_NEGSIGN;
-          node.pre = ceval_precedence[node.id];
+          node.pre = ceval_token_prec(node.id);
         } else if (c == '+') {
           node.id = CEVAL_POSSIGN;
-          node.pre = ceval_precedence[node.id];
+          node.pre = ceval_token_prec(node.id);
         } else {
           printf("[ceval]: Misplaced '%c' sign\n", c);
           return NULL;
         }
       }
+    } else if (!memcmp(expression - 1, "!", 1)) {
+      if (previous_id == CEVAL_NUMBER || previous_id == CEVAL_CLOSEPAR || previous_id == CEVAL_FACTORIAL) {
+        expression = expression + (1 - 1);
+        node.id = CEVAL_FACTORIAL;
+        node.pre = ceval_token_prec(node.id);
+      } else {
+          printf("[ceval]: Misplaced '%c' sign\n", c);
+          return NULL;
+      }
+    } else if (!memcmp(expression - 1, "<=", 2)) {
+      if (previous_id == CEVAL_NUMBER || previous_id == CEVAL_CLOSEPAR || previous_id == CEVAL_FACTORIAL) {
+        expression = expression + (2 - 1);
+        node.id = CEVAL_LESSER;
+        node.pre = ceval_token_prec(node.id);
+      } else {
+          printf("[ceval]: Misplaced '%c' sign\n", c);
+          return NULL;
+      }
+    } else if (!memcmp(expression - 1, ">=", 2)) {
+      if (previous_id == CEVAL_NUMBER || previous_id == CEVAL_CLOSEPAR || previous_id == CEVAL_FACTORIAL) {
+        expression = expression + (2 - 1);
+        node.id = CEVAL_GREATER;
+        node.pre = ceval_token_prec(node.id);
+      } else {
+          printf("[ceval]: Misplaced '%c' sign\n", c);
+          return NULL;
+      }
+    } else if (!memcmp(expression - 1, "==", 2)) {
+      if (previous_id == CEVAL_NUMBER || previous_id == CEVAL_CLOSEPAR || previous_id == CEVAL_FACTORIAL) {
+        node.id = CEVAL_EQUAL;
+        expression = expression + (2 - 1);
+        node.pre = ceval_token_prec(node.id);
+      } else {
+          printf("[ceval]: Misplaced '%c' sign\n", c);
+          return NULL;
+      }
+    } else if (!memcmp(expression - 1, "!=", 2)) {
+      if (previous_id == CEVAL_NUMBER || previous_id == CEVAL_CLOSEPAR || previous_id == CEVAL_FACTORIAL) {
+        expression = expression + (2 - 1);
+        node.id = CEVAL_NOTEQUAL;
+        node.pre = ceval_token_prec(node.id);
+      } else {
+          printf("[ceval]: Misplaced '%c' sign\n", c);
+          return NULL;
+      }
     } else if (!memcmp(expression - 1, "_pi", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_NUMBER;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
       node.number = CEVAL_CONST_PI;
     } else if (!memcmp(expression - 1, "exp", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_EXP;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "_e", 2)) {
       expression = expression + (2 - 1);
       node.id = CEVAL_NUMBER;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
       node.number = CEVAL_CONST_E;
-    } else if (!memcmp(expression - 1, "e", 1)) {
-      expression = expression + (1 - 1);
-      node.id = CEVAL_SCI2DEC;
-      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "abs", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_ABS;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "sqrt", 4)) {
       expression = expression + (4 - 1);
       node.id = CEVAL_SQRT;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "cbrt", 4)) {
       expression = expression + (4 - 1);
       node.id = CEVAL_CBRT;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "ceil", 4)) {
       expression = expression + (4 - 1);
       node.id = CEVAL_CEIL;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "floor", 5)) {
       expression = expression + (5 - 1);
       node.id = CEVAL_FLOOR;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "pow", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_POWFUN;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "atan2", 5)) {
       expression = expression + (5 - 1);
       node.id = CEVAL_ATAN2;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "ln", 2)) {
       expression = expression + (2 - 1);
       node.id = CEVAL_LN;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "log10", 5)) {
       expression = expression + (5 - 1);
       node.id = CEVAL_LOG10;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "log", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_LOG;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "sinh", 4)) {
       expression = expression + (4 - 1);
       node.id = CEVAL_SINH;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "cosh", 4)) {
       expression = expression + (4 - 1);
       node.id = CEVAL_COSH;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "tanh", 4)) {
       expression = expression + (4 - 1);
       node.id = CEVAL_TANH;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "sin", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_SIN;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "cos", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_COS;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "tan", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_TAN;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "asin", 4)) {
       expression = expression + (4 - 1);
       node.id = CEVAL_ASIN;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "acos", 4)) {
       expression = expression + (4 - 1);
       node.id = CEVAL_ACOS;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "atan", 4)) {
       expression = expression + (4 - 1);
       node.id = CEVAL_ATAN;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "deg2rad", 7)) {
       expression = expression + (7 - 1);
       node.id = CEVAL_DEG2RAD;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "rad2deg", 7)) {
       expression = expression + (7 - 1);
       node.id = CEVAL_RAD2DEG;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "signum", 6)) {
       expression = expression + (6 - 1);
       node.id = CEVAL_SIGNUM;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "gcd", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_GCD;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "hcf", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_HCF;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "lcm", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_LCM;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "int", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_INT;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else if (!memcmp(expression - 1, "frac", 4)) {
       expression = expression + (4 - 1);
       node.id = CEVAL_FRAC;
-      node.pre = ceval_precedence[node.id];
-    } else if (!memcmp(expression - 1, "<=", 2)) {
-      expression = expression + (2 - 1);
-      node.id = CEVAL_LESSER;
-      node.pre = ceval_precedence[node.id];
-    } else if (!memcmp(expression - 1, ">=", 2)) {
-      expression = expression + (2 - 1);
-      node.id = CEVAL_GREATER;
-      node.pre = ceval_precedence[node.id];
-    } else if (!memcmp(expression - 1, "==", 2)) {
-      expression = expression + (2 - 1);
-      node.id = CEVAL_EQUAL;
-      node.pre = ceval_precedence[node.id];
-    } else if (!memcmp(expression - 1, "!=", 2)) {
-      expression = expression + (2 - 1);
-      node.id = CEVAL_NOTEQUAL;
-      node.pre = ceval_precedence[node.id];
+      node.pre = ceval_token_prec(node.id);
     } else {
       printf("[ceval]: Unknown token '%c'.\n", c);
       ceval_delete_tree(root.right);
@@ -296,7 +322,7 @@ void ceval_print_node(const ceval_node * node, int indent) {
     else sprintf(number, "%.2f", node -> number);
     str = number;
   }else{
-    str = ceval_token_symbol[node->id];
+    str = ceval_token_symbol(node->id);
   }
   for (i = 0; i < indent; i++) {
     putchar(' ');
