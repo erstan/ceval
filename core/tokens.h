@@ -13,6 +13,7 @@ typedef enum ceval_node_id {
   CEVAL_SIN, CEVAL_COS, CEVAL_TAN, CEVAL_ASIN, CEVAL_ACOS, CEVAL_ATAN, CEVAL_SINH, CEVAL_COSH, CEVAL_TANH,
   CEVAL_DEG2RAD, CEVAL_RAD2DEG,
   CEVAL_SIGNUM,
+  CEVAL_SCI2DEC,
   CEVAL_LESSER, CEVAL_GREATER, CEVAL_LESSER_S, CEVAL_GREATER_S,
   CEVAL_EQUAL, CEVAL_NOTEQUAL,
   CEVAL_NUMBER
@@ -29,6 +30,7 @@ const char * ceval_token_symbol[] = {
   "sin", "cos", "tan", "asin", "acos", "atan", "sinh", "cosh", "tanh",
   "deg2rad", "rad2deg", 
   "signum",
+  "e",
   "<=", ">=", "<", ">", 
   "==", "!=",
   " "
@@ -45,6 +47,7 @@ const double ceval_precedence[] = {
   7, 7, 7, 7, 7, 7, 7, 7, 7,
   7, 7,
   7,
+  9,
   1.2, 1.2, 1.2, 1.2,
   1.1, 1.1,
   10

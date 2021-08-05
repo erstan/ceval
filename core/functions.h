@@ -74,6 +74,7 @@ double ceval_greater_s(double, double, int);
 double ceval_comma(double, double, int);
 double ceval_power(double, double, int);
 double ceval_atan2(double, double, int);
+double ceval_sci2dec(double, double, int);
 
 //helper function definitions
 void ceval_error(const char * error) {
@@ -221,7 +222,6 @@ double ceval_tanh(double x) {
 }
 
 //double argument function definitions
-//double argument function definitions
 double (*double_arg_fun[]) (double, double, int) = {
   NULL,
   NULL, NULL,
@@ -234,6 +234,7 @@ double (*double_arg_fun[]) (double, double, int) = {
   NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 
   NULL, NULL, 
   NULL, 
+  ceval_sci2dec,
   ceval_lesser, ceval_greater, ceval_lesser_s, ceval_greater_s,
   ceval_are_equal, ceval_not_equal,
   NULL
@@ -393,5 +394,8 @@ double ceval_atan2(double x, double y, int arg_check) {
     return NAN;
   }
   return atan2(x, y);
+}
+double ceval_sci2dec(double m, double e, int arg_check) {
+  return (double)m*ceval_power(10, e, 0);
 }
 #endif

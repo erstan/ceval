@@ -38,7 +38,7 @@ double ceval_evaluate_tree_(const ceval_node * node) {
   case CEVAL_ATAN2: case CEVAL_GCD: case CEVAL_HCF: case CEVAL_LCM: case CEVAL_LOG:
   case CEVAL_LESSER: case CEVAL_LESSER_S: case CEVAL_GREATER: case CEVAL_GREATER_S:
   case CEVAL_EQUAL: case CEVAL_NOTEQUAL:
-  case CEVAL_COMMA:
+  case CEVAL_COMMA: case CEVAL_SCI2DEC:
     if(node->left == NULL) {
       return (*double_arg_fun[node->id])(left, right, -1);
     } else if (node->right == NULL) {

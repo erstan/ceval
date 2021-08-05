@@ -130,8 +130,8 @@ void * ceval_make_tree(char * expression) {
           return NULL;
         }
       }
-    } else if (!memcmp(expression - 1, "pi", 2)) {
-      expression = expression + (2 - 1);
+    } else if (!memcmp(expression - 1, "_pi", 3)) {
+      expression = expression + (3 - 1);
       node.id = CEVAL_NUMBER;
       node.pre = ceval_precedence[node.id];
       node.number = CEVAL_CONST_PI;
@@ -139,11 +139,15 @@ void * ceval_make_tree(char * expression) {
       expression = expression + (3 - 1);
       node.id = CEVAL_EXP;
       node.pre = ceval_precedence[node.id];
-    } else if (!memcmp(expression - 1, "e", 1)) {
-      expression = expression + (1 - 1);
+    } else if (!memcmp(expression - 1, "_e", 2)) {
+      expression = expression + (2 - 1);
       node.id = CEVAL_NUMBER;
       node.pre = ceval_precedence[node.id];
       node.number = CEVAL_CONST_E;
+    } else if (!memcmp(expression - 1, "e", 1)) {
+      expression = expression + (1 - 1);
+      node.id = CEVAL_SCI2DEC;
+      node.pre = ceval_precedence[node.id];
     } else if (!memcmp(expression - 1, "abs", 3)) {
       expression = expression + (3 - 1);
       node.id = CEVAL_ABS;
