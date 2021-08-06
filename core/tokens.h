@@ -47,9 +47,9 @@ ceval_token_info_ ceval_token_info[] = {
     { CEVAL_POSSIGN, "+", 3, CEVAL_UNARY_OPERATOR }, 
     { CEVAL_NEGSIGN, "-", 3, CEVAL_UNARY_OPERATOR }, 
     { CEVAL_TIMES, "*", 4 , CEVAL_BINARY_OPERATOR },
+    { CEVAL_QUOTIENT, "//", 4 , CEVAL_BINARY_OPERATOR }, // '//' before '/'
     { CEVAL_DIVIDE, "/", 4 , CEVAL_BINARY_OPERATOR },
     { CEVAL_MODULO, "%", 4 , CEVAL_BINARY_OPERATOR },
-    { CEVAL_QUOTIENT, "\\", 4 , CEVAL_BINARY_OPERATOR },
     { CEVAL_ABS, "abs", 5 , CEVAL_UNARY_FUNCTION },
     { CEVAL_POW, "^", 4.9 , CEVAL_BINARY_OPERATOR },
     { CEVAL_EXP, "exp", 5 , CEVAL_UNARY_FUNCTION }, //exp before e
@@ -139,11 +139,6 @@ double ceval_token_prec(ceval_node_id id) {
             return ceval_token_info[i].prec;
         }
     }
-}
-ceval_node_id ceval_singlechar_token_id(char token) {
-    char temp[2] = "\0";
-    temp[0] = token;
-    return ceval_token_id(temp);
 }
 typedef struct ceval_node {
     enum ceval_node_id id;
