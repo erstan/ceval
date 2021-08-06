@@ -23,14 +23,14 @@ Any valid combination of the following operators and functions, with floating po
 
 * Arithematic operators
 
-`+` (addition), `-` (subtraction), `*` (multiplication), `/` (division), `%` (modulo), `^` (exponentiation), `//` (quotient), `!` (factorial)
+`+` (addition), `-` (subtraction), `*` (multiplication), `/` (division), `%` (modulo), `**` (exponentiation), `//` (quotient)
 * Relational operators
 
 `==` (equal), `!=` (not equal), `<` (strictly less), `>` (strictly greater), `<=` (less or equal), `>=` (greater or equal) to compare the results of two expressions
 
 * Single-argument functions
 
-`exp()`, `sqrt()`, `cbrt()`, `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `sinh()`, `cosh()`, `tanh()`, `abs()`, `ceil()`, `floor()`, `log10()`, `ln()`, `deg2rad()`, `rad2deg()`, `signum()`, `int()`, `frac()`
+`exp()`, `sqrt()`, `cbrt()`, `sin()`, `cos()`, `tan()`, `asin()`, `acos()`, `atan()`, `sinh()`, `cosh()`, `tanh()`, `abs()`, `ceil()`, `floor()`, `log10()`, `ln()`, `deg2rad()`, `rad2deg()`, `signum()`, `int()`, `frac()`, `fact()`
 
 * Two-argument functions
 
@@ -40,6 +40,14 @@ Any valid combination of the following operators and functions, with floating po
 
 `_pi`, `_e`
 ...pre-defined constants are prefixed with an underscore
+
+* Logical operators
+
+`&&`, `||` and `!`
+
+* Bitwise operators 
+
+`&`, `|`, `^`
 
 * Other operators
 
@@ -91,9 +99,9 @@ int main(int argc, char ** argv) {
 
 ## Test Run
 ```
-In = 3*7^2
+In = 3*7**2
                 2
-        ^
+        **
                 7
 *
         3
@@ -111,14 +119,14 @@ In = (3.2+2.8)/2
 Out = 3.000000
 
 
-In = _e^_pi>_pi^_e
-                2.72
-        ^
-                3.14
+In = _e**_pi>_pi**_e
+                _e
+        **
+                _pi
 >
-                3.14
-        ^
-                2.72
+                _pi
+        **
+                _e
 
 Out = 1.000000
 
@@ -149,15 +157,15 @@ In = 2*2.0+1.4
 Out = 5.400000
 
 
-In = (5/4+3*-5)+(sin(_pi))^2+(cos(_pi))^2
+In = (5/4+3*-5)+(sin(_pi))**2+(cos(_pi))**2
                 2
-        ^
-                        3.14
+        **
+                        _pi
                 cos
 +
                         2
-                ^
-                                3.14
+                **
+                                _pi
                         sin
         +
                                         5
@@ -220,17 +228,17 @@ Out = 15.700000
 In = sin(_pi/2)+cos(_pi/2)+tan(_pi/2)
                         2
                 /
-                        3.14
+                        _pi
         tan
 +
                                 2
                         /
-                                3.14
+                                _pi
                 cos
         +
                                 2
                         /
-                                3.14
+                                _pi
                 sin
 
 [ceval]: tan() is not defined for odd-integral multiples of _pi/2

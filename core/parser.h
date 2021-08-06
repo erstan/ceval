@@ -104,9 +104,8 @@ void * ceval_make_tree(char * expression) {
                 if (previous_id == CEVAL_NUMBER ||
                     previous_id == CEVAL_CONST_PI ||
                     previous_id == CEVAL_CONST_E ||
-                    previous_id == CEVAL_CLOSEPAR ||
-                    previous_id == CEVAL_FACTORIAL) {
-                    // other tokens (other than CEVAL_NUMBER, CEVAL_CLOSEPAR, CEVAL_FACTORIAL) are allowed only before '+'s or '-'s
+                    previous_id == CEVAL_CLOSEPAR) {
+                    // other tokens (other than CEVAL_NUMBER, CEVAL_CLOSEPAR) are allowed only before '+'s or '-'s
                     expression = expression + (len - 1);
                     node.id = token_found;
                     node.pre = ceval_token_prec(node.id);

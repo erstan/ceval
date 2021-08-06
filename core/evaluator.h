@@ -16,7 +16,7 @@ double ceval_evaluate_tree_(const ceval_node * node) {
     right = ceval_evaluate_tree_(node -> right);
     switch (node -> id) {
 
-        //unary operators/functions
+        //unary-right operators/functions (operate on the expression to their right)
         case CEVAL_NEGSIGN:
         case CEVAL_POSSIGN:
         case CEVAL_EXP:
@@ -42,14 +42,14 @@ double ceval_evaluate_tree_(const ceval_node * node) {
         case CEVAL_INT:
         case CEVAL_FRAC:
         case CEVAL_FACTORIAL:
+        case CEVAL_NOT:
             if (node -> left == NULL) {
                 //operate on right operand
                 return ( * single_arg_fun[node -> id])(right);
-            } else if (node -> right == NULL) {
-                //operate on left operand(e.g; factorial())
-                return ( * single_arg_fun[node -> id])(left);
+            } else {
+                ceval_error("Missing operand(s)");
+                return NAN;
             }
-
         //binary operators/functions
         case CEVAL_PLUS:
         case CEVAL_MINUS:
@@ -72,6 +72,11 @@ double ceval_evaluate_tree_(const ceval_node * node) {
         case CEVAL_NOTEQUAL:
         case CEVAL_COMMA:
         case CEVAL_SCI2DEC:
+        case CEVAL_AND:
+        case CEVAL_OR:
+        case CEVAL_BIT_AND:
+        case CEVAL_BIT_XOR:
+        case CEVAL_BIT_OR:
             if (node -> left == NULL) {
                 return ( * double_arg_fun[node -> id])(left, right, -1);
             } else if (node -> right == NULL) {

@@ -16,6 +16,11 @@ typedef enum ceval_node_id {
     CEVAL_SCI2DEC,
     CEVAL_LESSER, CEVAL_GREATER, CEVAL_LESSER_S, CEVAL_GREATER_S,
     CEVAL_EQUAL, CEVAL_NOTEQUAL,
+    CEVAL_AND, CEVAL_OR,
+    CEVAL_NOT,
+    CEVAL_BIT_AND,
+    CEVAL_BIT_XOR,
+    CEVAL_BIT_OR,
     CEVAL_NUMBER,
     CEVAL_CONST_PI,
     CEVAL_CONST_E
@@ -46,12 +51,12 @@ ceval_token_info_ ceval_token_info[] = {
     { CEVAL_MINUS, "-", 2 , CEVAL_BINARY_OPERATOR },
     { CEVAL_POSSIGN, "+", 3, CEVAL_UNARY_OPERATOR }, 
     { CEVAL_NEGSIGN, "-", 3, CEVAL_UNARY_OPERATOR }, 
+    { CEVAL_POW, "**", 4.9 , CEVAL_BINARY_OPERATOR }, // ** before *
     { CEVAL_TIMES, "*", 4 , CEVAL_BINARY_OPERATOR },
     { CEVAL_QUOTIENT, "//", 4 , CEVAL_BINARY_OPERATOR }, // '//' before '/'
     { CEVAL_DIVIDE, "/", 4 , CEVAL_BINARY_OPERATOR },
     { CEVAL_MODULO, "%", 4 , CEVAL_BINARY_OPERATOR },
     { CEVAL_ABS, "abs", 5 , CEVAL_UNARY_FUNCTION },
-    { CEVAL_POW, "^", 4.9 , CEVAL_BINARY_OPERATOR },
     { CEVAL_EXP, "exp", 5 , CEVAL_UNARY_FUNCTION }, //exp before e
     { CEVAL_SQRT, "sqrt", 5 , CEVAL_UNARY_FUNCTION },
     { CEVAL_CBRT, "cbrt", 5 , CEVAL_UNARY_FUNCTION },
@@ -68,7 +73,7 @@ ceval_token_info_ ceval_token_info[] = {
     { CEVAL_INT, "int", 5, CEVAL_UNARY_FUNCTION },
     { CEVAL_FRAC, "frac", 5, CEVAL_UNARY_FUNCTION },
     { CEVAL_NOTEQUAL, "!=", 1.1 , CEVAL_BINARY_OPERATOR }, //!= before !
-    { CEVAL_FACTORIAL, "!", 6, CEVAL_UNARY_OPERATOR }, 
+    { CEVAL_FACTORIAL, "fact", 7, CEVAL_UNARY_FUNCTION }, 
     { CEVAL_SINH, "sinh", 7, CEVAL_UNARY_FUNCTION }, //hyperbolics before trig functions
     { CEVAL_COSH, "cosh", 7, CEVAL_UNARY_FUNCTION },
     { CEVAL_TANH, "tanh", 7, CEVAL_UNARY_FUNCTION },
@@ -87,6 +92,12 @@ ceval_token_info_ ceval_token_info[] = {
     { CEVAL_LESSER_S, "<", 1.2 , CEVAL_BINARY_OPERATOR },
     { CEVAL_GREATER_S, ">", 1.2 , CEVAL_BINARY_OPERATOR },
     { CEVAL_EQUAL, "==", 1.1 , CEVAL_BINARY_OPERATOR },
+    { CEVAL_AND, "&&", 1.02, CEVAL_BINARY_OPERATOR },
+    { CEVAL_OR, "||", 1.01, CEVAL_BINARY_OPERATOR },
+    { CEVAL_NOT, "!", 5, CEVAL_UNARY_FUNCTION},
+    { CEVAL_BIT_AND, "&", 1.05, CEVAL_BINARY_OPERATOR},
+    { CEVAL_BIT_XOR, "^", 1.04, CEVAL_BINARY_OPERATOR},
+    { CEVAL_BIT_OR, "|", 1.03, CEVAL_BINARY_OPERATOR},
     { CEVAL_NUMBER, "0", 10, CEVAL_OTHER },
     { CEVAL_NUMBER, "1", 10, CEVAL_OTHER },
     { CEVAL_NUMBER, "2", 10, CEVAL_OTHER },
