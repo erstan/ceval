@@ -47,7 +47,7 @@ Any valid combination of the following operators and functions, with floating po
 
 * Bitwise operators 
 
-`&`, `|`, `^`
+`&`, `|`, `^`, `<<`, `>>`, `~`
 
 * Other operators
 
