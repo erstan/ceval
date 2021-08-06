@@ -85,27 +85,6 @@ void * ceval_make_tree(char * expression) {
         char c = * expression++;
         isRightAssoc = (c == '^' || c == ')') ? 1 : 0;
         if (c == '\0') break;
-        else if (ceval_singlechar_token_id(c) == CEVAL_WHITESPACE) continue;
-        else if (c == '(' || c == ')') {
-            node.id = ceval_singlechar_token_id(c);
-            node.pre = ceval_token_prec(node.id);
-            goto END;
-        } else if (ceval_singlechar_token_id(c) == CEVAL_NUMBER) {
-            node.pre = ceval_token_prec(CEVAL_NUMBER);
-            int i;
-            char number[15];
-            for (i = 0; i + 1 < sizeof(number);) {
-                number[i++] = c;
-                c = * expression;
-                if (ceval_singlechar_token_id(c) == CEVAL_NUMBER || c == '.')
-                    expression++;
-                else break;
-            }
-            number[i] = '\0';
-            sscanf(number, "%lf", & node.number);
-            node.id = CEVAL_NUMBER;
-            goto END;
-        }
         int token_found = -1;
         char token[50];
         int len;
@@ -117,18 +96,23 @@ void * ceval_make_tree(char * expression) {
                 break;
             }
         }
+        // if token is found
         if (token_found > -1) {
+            // check if the token is a binary operator
             if (ceval_is_binary_opr(token_found)) {
+                // a binary operator must be preceded by a number, a numerical constant, a clospar, or a factorial
                 if (previous_id == CEVAL_NUMBER ||
                     previous_id == CEVAL_CONST_PI ||
                     previous_id == CEVAL_CONST_E ||
                     previous_id == CEVAL_CLOSEPAR ||
                     previous_id == CEVAL_FACTORIAL) {
-                    //other tokens (other than CEVAL_NUMBER, CEVAL_CLOSEPAR, CEVAL_FACTORIAL) are allowed only before '+'s or '-'s
+                    // other tokens (other than CEVAL_NUMBER, CEVAL_CLOSEPAR, CEVAL_FACTORIAL) are allowed only before '+'s or '-'s
                     expression = expression + (len - 1);
                     node.id = token_found;
                     node.pre = ceval_token_prec(node.id);
                 } else {
+                    // if the operator is not preceded by a number, a numerical constant, a closepar, or a factorial, then check if the 
+                    // character is a sign ('+' or '-')
                     if (c == '+') {
                         node.id = CEVAL_POSSIGN;
                         node.pre = ceval_token_prec(node.id);
@@ -136,11 +120,34 @@ void * ceval_make_tree(char * expression) {
                         node.id = CEVAL_NEGSIGN;
                         node.pre = ceval_token_prec(node.id);
                     } else {
+                        // if it is not a sign, then it must be a misplaced character
                         printf("[ceval]: Misplaced '%c' sign\n", c);
                         return NULL;
                     }
                 }
+            } else if (token_found == CEVAL_NUMBER){
+                // if the token is a number, then store it in an array
+                node.pre = ceval_token_prec(CEVAL_NUMBER);
+                int i;
+                char number[CEVAL_MAX_DIGITS];
+                for (i = 0; i + 1 < sizeof(number);) {
+                    number[i++] = c;
+                    c = * expression;
+                    if ('0' <= c && c <= '9' || c == '.')
+                        expression++;
+                    else 
+                        break;
+                }
+                number[i] = '\0';
+                //copy the contents of the number array at &node.number
+                sscanf(number, "%lf", & node.number);
+                node.id = CEVAL_NUMBER;
+                goto END;
+            } else if (token_found == CEVAL_WHITESPACE) {
+                // skip whitespace
+                continue;
             } else {
+                // for any other token
                 expression = expression + (len - 1);
                 node.id = token_found;
                 node.pre = ceval_token_prec(node.id);
@@ -149,6 +156,7 @@ void * ceval_make_tree(char * expression) {
                 }
             }
         } else {
+            // if the token is not found in the token table
             printf("[ceval]: Unknown token '%c'.\n", c);
             ceval_delete_tree(root.right);
             root.right = NULL;

@@ -11,11 +11,14 @@
 //constant definitions
 const float CEVAL_PI = M_PI;
 const float CEVAL_E = M_E;
-#ifndef EPSILON
-#define EPSILON 1e-2
+#ifndef CEVAL_EPSILON
+#define CEVAL_EPSILON 1e-2
 #endif
-#ifndef DELTA
-#define DELTA 1e-6
+#ifndef CEVAL_DELTA
+#define CEVAL_DELTA 1e-6
+#endif
+#ifndef CEVAL_MAX_DIGITS
+#define CEVAL_MAX_DIGITS 15
 #endif
 //these can be defined by the user before the include directive depending the desired level of precision
 
@@ -140,22 +143,22 @@ double ceval_atan(double x) {
 }
 double ceval_sin(double x) {
     double sin_val = sin(x);
-    //sin(pi) == 0.000000, but sin(pi-EPSILON) == -0.00000* and sin(pi+EPSILON) == +0.00000*
+    //sin(pi) == 0.000000, but sin(pi-CEVAL_EPSILON) == -0.00000* and sin(pi+CEVAL_EPSILON) == +0.00000*
     //since the precision of pi (approx) is limited, it often leads to -0.0000 printed out as a result
-    //thus, we assumse 0.0000 value for all |sin(x)|<=EPSILON
-    return (fabs(sin_val) <= EPSILON) ? 0 : sin_val;
+    //thus, we assumse 0.0000 value for all |sin(x)|<=CEVAL_EPSILON
+    return (fabs(sin_val) <= CEVAL_EPSILON) ? 0 : sin_val;
 }
 double ceval_cos(double x) {
     double cos_val = cos(x);
-    return (fabs(cos_val) <= EPSILON) ? 0 : cos_val;
+    return (fabs(cos_val) <= CEVAL_EPSILON) ? 0 : cos_val;
 }
 double ceval_tan(double x) {
     double tan_val = tan(x);
-    if (fabs(ceval_modulus(x - CEVAL_PI / 2, CEVAL_PI, 0)) <= DELTA) {
+    if (fabs(ceval_modulus(x - CEVAL_PI / 2, CEVAL_PI, 0)) <= CEVAL_DELTA) {
         ceval_error("tan() is not defined for odd-integral multiples of pi/2");
         return NAN;
     }
-    return (fabs(tan_val) <= EPSILON) ? 0 : tan_val;
+    return (fabs(tan_val) <= CEVAL_EPSILON) ? 0 : tan_val;
 }
 double ceval_rad2deg(double x) {
     return x / CEVAL_PI * 180;
@@ -334,7 +337,7 @@ double ceval_are_equal(double a, double b, int arg_check) {
         ceval_error("==: too few arguments provided");
         return NAN;
     }
-    if (fabs(a - b) <= EPSILON) {
+    if (fabs(a - b) <= CEVAL_EPSILON) {
         return 1;
     } else {
         return 0;
@@ -352,14 +355,14 @@ double ceval_lesser(double a, double b, int arg_check) {
         ceval_error("<=: too few arguments provided");
         return NAN;
     }
-    return (b - a) >= EPSILON;
+    return (b - a) >= CEVAL_EPSILON;
 }
 double ceval_greater(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error(">=: too few arguments provided");
         return NAN;
     }
-    return (a - b) >= EPSILON;
+    return (a - b) >= CEVAL_EPSILON;
 }
 double ceval_lesser_s(double a, double b, int arg_check) {
     if (arg_check) {
