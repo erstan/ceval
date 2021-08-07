@@ -2,7 +2,8 @@
   "name": "ceval",
   "version": "1.0.0",
   "repo": "e-t-sudo/ceval",
-  "install": "sudo make uninstall",
+  "install": "sudo make install",
+  "uninstall": "sudo make uninstall",
   "makefile": "Makefile",
   "src": [
 	  "ceval.h",
