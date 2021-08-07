@@ -1,0 +1,16 @@
+{
+  "name": "ceval",
+  "version": "1.0.0",
+  "repo": "e-t-sudo/ceval",
+  "install": "sudo make uninstall",
+  "makefile": "Makefile",
+  "src": [
+	  "ceval.h",
+	  "core/tokens.h",
+	  "core/functions.h",
+	  "core/parser.h","
+	  "core/evaluator.h",
+	  "Makefile"
+  ],
+  "license": "MIT"
+}
