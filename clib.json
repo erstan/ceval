@@ -8,7 +8,7 @@
 	  "ceval.h",
 	  "core/tokens.h",
 	  "core/functions.h",
-	  "core/parser.h","
+	  "core/parser.h",
 	  "core/evaluator.h",
 	  "Makefile"
   ],
