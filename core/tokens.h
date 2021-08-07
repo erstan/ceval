@@ -25,41 +25,50 @@ typedef enum ceval_token_prec_specifiers {
 // these precision specifiers are ordered in the ascending order of their precedences
 // here, the higher precedence operators are evaluated first and end up at the bottom of the parse trees
     CEVAL_PREC_IGNORE, 
-    // {"operators": [' ', '\t', '\n', '\b', '\r']}
+    // {' ', '\t', '\n', '\b', '\r'}
     CEVAL_PREC_PARANTHESES,
-    // {"operators": ['(', ')']}
+    // {'(', ')'}
     CEVAL_PREC_COMMA_OPR,
-    // {"operators": [',']}
+    // {','}
     CEVAL_PREC_LOGICAL_OR_OPR,
-    // {"operators": ['||']}
+    // {'||'}
     CEVAL_PREC_LOGICAL_AND_OPR,
-    // {"operators": ['&&']}
+    // {'&&'}
     CEVAL_PREC_BIT_OR_OPR,
-    // {"operators": ['|']}
+    // {'|'}
     CEVAL_PREC_BIT_XOR_OPR,
-    // {"operators": ['^']}
+    // {'^'}
     CEVAL_PREC_BIT_AND_OPR,
-    // {"operators": ['&']}
+    // {'&'}
     CEVAL_PREC_EQUALITY_OPRS,
-    // {"operators": ['==', '!=']}
+    // {'==', '!='}
     CEVAL_PREC_RELATIONAL_OPRS,
-    // {"operators": ['<', '>', '<=', '>=']}
+    // {'<', '>', '<=', '>='}
     CEVAL_PREC_BIT_SHIFT_OPRS,
-    // {"operators": ['<<', '>>']}
+    // {'<<', '>>'}
     CEVAL_PREC_ADDITIVE_OPRS,
-    // {"operators": ['+', '-']}
+    // {'+', '-'}
     CEVAL_PREC_SIGN_OPRS,
-    // {"operators": ['+', '-']}
+    // {'+', '-'}
     CEVAL_PREC_MULTIPLICATIVE_OPRS,
-    // {"operators": ['*', '/', '%', '//']}
+    // {'*', '/', '%', '//'}
     CEVAL_PREC_EXPONENTIATION_OPR,
-    // {"operators": ['**']}
+    // {'**'}
     CEVAL_PREC_FUNCTIONS,
-    // {"operators": ['']}
+    // {
+    //     'exp()', 'sqrt()', 'cbrt()', 'sin()',
+    //     'cos()', 'tan()', 'asin()', 'acos()', 
+    //     'atan()', 'sinh()', 'cosh()', 'tanh()', 
+    //     'abs()', 'ceil()', 'floor()', 'log10()', 
+    //     'ln()', 'deg2rad()', 'rad2deg()', 'signum()',
+    //     'int()', 'frac()', 'fact()', `pow()`, 
+    //     `atan2()`, `gcd()`, `hcf()`, `lcm()`,
+    //     `log()`
+    // }
     CEVAL_PREC_NOT_OPRS,
-    // {"operators": ['!', '~']}
+    // {'!', '~'}}
     CEVAL_PREC_SCI2DEC_OPR,
-    // {"operators": ['e']},
+    // {'e'},
     CEVAL_PREC_NUMERIC
     // {'_pi', '_e', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'}
 } ceval_token_prec_specifiers;
