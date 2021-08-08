@@ -101,11 +101,17 @@ char * ceval_shrink(char * x) {
     char * y = x;
     int len = 0;
     for (int i = 0; i < strlen(x); i++) {
-        if (x[i] != ' ' || x[i] != '\t') {
+        if(x[i] == ' ' || x[i] == '\n' || x[i] == '\t' || x[i] == '\r') {
+            continue;
+        } else {
+            if(x[i]=='(' && x[i+1]==')') {
+                // empty pairs of parantheses are ignored
+                // simlar to c lang where {} are ignored as empty blocks of code
+                i++;
+                continue;
+            }
             *(y + len) = tolower(x[i]);
             len++;
-        } else {
-            continue;
         }
     }
     y[len] = '\0';

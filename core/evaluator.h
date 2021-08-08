@@ -24,7 +24,7 @@ double ceval_evaluate_tree_(const ceval_node * node) {
         case CEVAL_TAN: case CEVAL_ASIN: case CEVAL_ACOS: case CEVAL_ATAN: 
         case CEVAL_SINH: case CEVAL_COSH: case CEVAL_TANH: case CEVAL_NOT: 
         case CEVAL_BIT_NOT: case CEVAL_POSSIGN: case CEVAL_NEGSIGN: 
-            if (node -> left == NULL) {
+            if (node -> right != NULL) {
                 //operate on right operand
                 return ( * single_arg_fun[node -> id])(right);
             } else {
@@ -39,7 +39,7 @@ double ceval_evaluate_tree_(const ceval_node * node) {
         case CEVAL_BIT_RSHIFT:  case CEVAL_PLUS:  case CEVAL_MINUS:  case CEVAL_TIMES:  
         case CEVAL_DIVIDE:  case CEVAL_MODULO:  case CEVAL_QUOTIENT:  case CEVAL_POW: 
         case CEVAL_GCD:  case CEVAL_HCF:  case CEVAL_LCM:  case CEVAL_LOG: 
-        case CEVAL_ATAN2:  case CEVAL_SCI2DEC: case CEVAL_POWERFUN:
+        case CEVAL_ATAN2:  case CEVAL_SCI2DEC: case CEVAL_POWFUN:
             if (node -> left == NULL) {
                 return ( * double_arg_fun[node -> id])(left, right, -1);
             } else if (node -> right == NULL) {
