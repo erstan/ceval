@@ -98,6 +98,7 @@ void * ceval_make_tree(char * expression) {
         }
         // if token is found
         if (token_found > -1) {
+            //printf("token: %d\n", token_found);
             // check if the token is a binary operator
             if (ceval_is_binary_opr(token_found)) {
                 // a binary operator must be preceded by a number, a numerical constant, a clospar, or a factorial
@@ -170,7 +171,7 @@ void * ceval_make_tree(char * expression) {
 }
 void ceval_print_node(const ceval_node * node, int indent) {
     int i;
-    char number[20];
+    char number[CEVAL_MAX_DIGITS];
     const char * str;
     if (!node) return;
     ceval_print_node(node -> right, indent + 4);
@@ -186,7 +187,7 @@ void ceval_print_node(const ceval_node * node, int indent) {
         putchar(' ');
         putchar(' ');
     }
-    puts(str);
+    printf("%s\n", str);
     ceval_print_node(node -> left, indent + 4);
 }
 void ceval_print_tree(const void * tree) {
