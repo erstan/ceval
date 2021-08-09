@@ -5,7 +5,7 @@
   "main": "ceval.h",
   "repository": {
     "type": "git",
-    "url": "https://github.com/e-t-sudo/ceval.git"
+    "url": "https://github.com/erstan/ceval.git"
   },
   "keywords": [
     "c",
@@ -18,7 +18,7 @@
   "author": "Ershad Tantry",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/e-t-sudo/ceval/issues"
+    "url": "https://github.com/erstan/ceval/issues"
   },
-  "homepage": "https://github.com/e-t-sudo/ceval#readme"
+  "homepage": "https://github.com/erstan/ceval#readme"
 }

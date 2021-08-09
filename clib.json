@@ -1,7 +1,7 @@
 {
   "name": "ceval",
   "version": "0.0.1",
-  "repo": "e-t-sudo/ceval",
+  "repo": "erstan/ceval",
   "description": "Parse and evaluate math expressions",
   "install": "sudo make install",
   "uninstall": "sudo make uninstall",

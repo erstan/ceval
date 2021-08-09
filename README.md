@@ -62,7 +62,7 @@ Any valid combination of the following operators and functions, with floating po
 
 ## Installation
 ```shell
-git clone https://github.com/e-t-sudo/ceval.git /tmp/ceval && \
+git clone https://github.com/erstan/ceval.git /tmp/ceval && \
 cd /tmp/ceval && \
 sudo make install
 ```
