@@ -61,10 +61,16 @@ Any valid combination of the following operators and functions, with floating po
 
 
 ## Installation
+From source:
+
 ```shell
 git clone https://github.com/erstan/ceval.git /tmp/ceval && \
 cd /tmp/ceval && \
 sudo make install
+```
+<b>Or</b> install the latest release with the [clib](https://github.com/clibs/clib) package manager:
+```shell
+clib install erstan/ceval -o /tmp/ceval
 ```
 
 ## Usage
