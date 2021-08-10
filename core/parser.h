@@ -44,7 +44,7 @@ ceval_node * ceval_insert_node(ceval_node * current, ceval_node item, int isRigh
         current = parent_of_openpar;
 
         if (current -> right -> id == CEVAL_COMMA &&
-            ceval_is_binay_fun(current -> id)) {
+            ceval_is_binary_fun(current -> id)) {
             ceval_node * address_of_comma = current -> right;
             parent_of_openpar -> left = address_of_comma -> left;
             address_of_comma -> left -> parent = parent_of_openpar;
@@ -92,7 +92,7 @@ void * ceval_make_tree(char * expression) {
             len = strlen(token);
             if (!memcmp(expression - 1, token, len)) {
                 token_found = ceval_token_info[i].id;
-                isRightAssoc = ( token_found == CEVAL_POW || token_found == CEVAL_CLOSEPAR ) ? 1 : 0;
+                isRightAssoc = (token_found == CEVAL_POW || token_found == CEVAL_CLOSEPAR ) ? 1 : 0;
                 break;
             }
         }
@@ -100,7 +100,7 @@ void * ceval_make_tree(char * expression) {
         if (token_found > -1) {
             //printf("token: %d\n", token_found);
             // check if the token is a binary operator
-            if (ceval_is_binary_opr(token_found)) {
+            if (ceval_is_binary_opr((ceval_node_id)token_found)) {
                 // a binary operator must be preceded by a number, a numerical constant, a clospar, or a factorial
                 if (previous_id == CEVAL_NUMBER ||
                     previous_id == CEVAL_CONST_PI ||
@@ -108,7 +108,7 @@ void * ceval_make_tree(char * expression) {
                     previous_id == CEVAL_CLOSEPAR) {
                     // other tokens (other than CEVAL_NUMBER, CEVAL_CLOSEPAR) are allowed only before '+'s or '-'s
                     expression = expression + (len - 1);
-                    node.id = token_found;
+                    node.id = (ceval_node_id)token_found;
                     node.pre = ceval_token_prec(node.id);
                 } else {
                     // if the operator is not preceded by a number, a numerical constant, a closepar, or a factorial, then check if the 
@@ -149,7 +149,7 @@ void * ceval_make_tree(char * expression) {
             } else {
                 // for any other token
                 expression = expression + (len - 1);
-                node.id = token_found;
+                node.id = (ceval_node_id)token_found;
                 node.pre = ceval_token_prec(node.id);
                 if (node.id == CEVAL_CONST_PI || node.id == CEVAL_CONST_E) {
                     node.number = (node.id == CEVAL_CONST_PI) ? CEVAL_PI : CEVAL_E;

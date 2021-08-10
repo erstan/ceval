@@ -93,8 +93,12 @@ void ceval_error(const char * error) {
 double ceval_gcd_binary(int a, int b) {
     if (a == 0 && b == 0)
         return 0;
-    while (b)
-        b ^= a ^= b ^= a %= b;
+    while (b) {
+        a %= b;
+        b ^= a;
+        a ^= b;
+        b ^= a;
+    }
     return a;
 }
 char * ceval_shrink(char * x) {
@@ -252,6 +256,7 @@ double ceval_bit_not(double x) {
         return ~(int)x;
     } else {
         ceval_error("bit_not(): operand must be of integral type");
+        return NAN;
     }
 }
 //double argument function definitions
@@ -490,6 +495,7 @@ double ceval_bit_and(double x, double y, int arg_check) {
         return (int)x & (int)y;
     } else {
         ceval_error("bit_and(): operands must be of integral type");
+        return NAN;
     }
 }
 double ceval_bit_xor(double x, double y, int arg_check) {
@@ -501,6 +507,7 @@ double ceval_bit_xor(double x, double y, int arg_check) {
         return (int)x ^ (int)y;
     } else {
         ceval_error("bit_xor(): operands must be of integral type");
+        return NAN;
     }
 }
 double ceval_bit_or(double x, double y, int arg_check) {
@@ -512,6 +519,7 @@ double ceval_bit_or(double x, double y, int arg_check) {
         return (int)x | (int)y;
     } else {
         ceval_error("bit_or(): operands must be of integral type");
+        return NAN;
     }
 }
 double ceval_bit_lshift(double x, double y, int arg_check) {
@@ -523,6 +531,7 @@ double ceval_bit_lshift(double x, double y, int arg_check) {
         return (int)x << (int)y;
     } else {
         ceval_error("bit_lshift(): operands must be of integral type");
+        return NAN;
     }
 
 }
@@ -535,6 +544,7 @@ double ceval_bit_rshift(double x, double y, int arg_check) {
         return (int)x >> (int)y;
     } else {
         ceval_error("bit_rshift(): operands must be of integral type");
+        return NAN;
     }
 }
 #endif

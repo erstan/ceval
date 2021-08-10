@@ -182,7 +182,7 @@ int ceval_is_binary_opr(ceval_node_id id) {
     }
     return 0;
 }
-int ceval_is_binay_fun(ceval_node_id id) {
+int ceval_is_binary_fun(ceval_node_id id) {
     for (int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
         if (ceval_token_info[i].id == id && ceval_token_info[i].token_type == CEVAL_BINARY_FUNCTION) {
             return 1;
@@ -196,6 +196,7 @@ const char * ceval_token_symbol(ceval_node_id id) {
             return ceval_token_info[i].symbol;
         }
     }
+return "";
 }
 ceval_node_id ceval_token_id(char * symbol) {
     for (int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
@@ -203,6 +204,7 @@ ceval_node_id ceval_token_id(char * symbol) {
             return ceval_token_info[i].id;
         }
     }
+return CEVAL_WHITESPACE;
 }
 double ceval_token_prec(ceval_node_id id) {
     for (int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
@@ -210,6 +212,7 @@ double ceval_token_prec(ceval_node_id id) {
             return ceval_token_info[i].prec;
         }
     }
+return 0;
 }
 typedef struct ceval_node {
     enum ceval_node_id id;
