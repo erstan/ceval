@@ -31,7 +31,7 @@ void ceval_tree(char * expr) {
     ceval_delete_tree(tree);
 }
 
-#ifdef CXX
+#ifdef CEVAL_CXX
     double ceval_result(std::string expr) {
         return ceval_result((char * ) expr.c_str());
     }
