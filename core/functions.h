@@ -245,11 +245,7 @@ double ceval_tanh(double x) {
     return tanh(x);
 }
 double ceval_not(double x) {
-    if(ceval_frac_part(x) == 0) {
-        return !(int)x;
-    } else {
-        ceval_error("bit_not(): operand must be of integral type");
-    }
+    return !x;
 }
 double ceval_bit_not(double x) {
     if(ceval_frac_part(x) == 0) {
@@ -318,6 +314,10 @@ double ceval_div(double a, double b, int arg_check) {
     return a / b;
 }
 double ceval_modulus(double a, double b, int arg_check) {
+    if (arg_check) {
+        ceval_error("modulo(): function takes two arguments");
+        return NAN;
+    }
     if (b == 0) {
         ceval_error("Division by 0 is not defined...");
         ceval_error("Continuing evaluation with the assumption 1%0 = 0");
@@ -326,6 +326,10 @@ double ceval_modulus(double a, double b, int arg_check) {
     return fmod(a, b);
 }
 double ceval_quotient(double a, double b, int arg_check) {
+    if (arg_check) {
+        ceval_error("quotient(): function takes two arguments");
+        return NAN;
+    }
     //a = b*q + r
     //q = (a - r)/b
     if (b == 0 && a == 0) {
@@ -443,6 +447,10 @@ double ceval_power(double x, double y, int arg_check) {
         ceval_error("pow(): function takes two arguments");
         return NAN;
     }
+    if(x<0 && ceval_frac_part(y)!=0) {
+        ceval_error("pow(): negative numbers can only be raised to integral powers");
+        return NAN;
+    }
     return pow(x, y);
 }
 double ceval_atan2(double x, double y, int arg_check) {
@@ -454,7 +462,7 @@ double ceval_atan2(double x, double y, int arg_check) {
 }
 double ceval_sci2dec(double m, double e, int arg_check) {
     if (arg_check) {
-        ceval_error("atan2(): function takes two arguments");
+        ceval_error("sci2dec(): function takes two arguments");
         return NAN;
     }
     return (double) m * ceval_power(10, e, 0);
