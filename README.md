@@ -103,7 +103,33 @@ int main(int argc, char ** argv) {
   return 0;
 }
 ```
+The same interpreter can be implemented in C++ as follows
+```
+//lang=cpp
+#include<iostream>
+#include<cstdlib>
+#include<string>
 
+#include<ceval/ceval.h>
+
+int main(int argc, char ** argv) {
+  std::string expr;
+  while (1) {
+    printf("In = ");
+    std::cin >> expr;
+    if (expr=="exit") {
+      break;
+    } else if (expr=="clear") {
+      system("clear");
+      continue;
+    } else {
+      ceval_tree(expr);
+      std::cout << "\nOut = " << ceval_result(expr) << "\n\n";
+    }
+  }
+  return 0;
+}
+```
 ## Test Run
 ```
 In = 3*7**2
