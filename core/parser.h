@@ -98,7 +98,6 @@ void * ceval_make_tree(char * expression) {
         }
         // if token is found
         if (token_found > -1) {
-            //printf("token: %d\n", token_found);
             // check if the token is a binary operator
             if (ceval_is_binary_opr((ceval_node_id)token_found)) {
                 // a binary operator must be preceded by a number, a numerical constant, a clospar, or a factorial
@@ -121,7 +120,9 @@ void * ceval_make_tree(char * expression) {
                         node.pre = ceval_token_prec(node.id);
                     } else {
                         // if it is not a sign, then it must be a misplaced character
-                        printf("[ceval]: Misplaced '%c' sign\n", c);
+                        ceval_error("Misplaced '%c'.", c);
+                        ceval_delete_tree(root.right);
+                        root.right = NULL;
                         return NULL;
                     }
                 }
@@ -157,10 +158,10 @@ void * ceval_make_tree(char * expression) {
             }
         } else {
             // if the token is not found in the token table
-            printf("[ceval]: Unknown token '%c'.\n", c);
+            ceval_error("Unknown token '%c'.", c);
             ceval_delete_tree(root.right);
             root.right = NULL;
-            break;
+            return NULL;
         }
         END: ;
         previous_id = node.id;

@@ -52,6 +52,7 @@ double ceval_evaluate_tree_(const ceval_node * node) {
     }
 }
 double ceval_evaluate_tree(const void * node) {
-    return ceval_evaluate_tree_((ceval_node * ) node);
+    return (node == NULL)? NAN :
+            ceval_evaluate_tree_((ceval_node * ) node);
 }
 #endif

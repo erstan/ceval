@@ -7,6 +7,7 @@
 #include<math.h>
 #include<string.h>
 #include<ctype.h>
+#include<stdarg.h>
 
 //constant definitions
 const float CEVAL_PI = M_PI;
@@ -23,7 +24,7 @@ const float CEVAL_E = M_E;
 //these can be defined by the user before the include directive depending the desired level of precision
 
 //helper function prototypes
-void ceval_error(const char * );
+void ceval_error(const char * , ...);
 double ceval_gcd_binary(int, int);
 char * ceval_shrink(char * );
 
@@ -87,8 +88,16 @@ double ceval_bit_lshift(double, double, int);
 double ceval_bit_rshift(double, double, int);
 
 //helper function definitions
-void ceval_error(const char * error) {
-    if (strcmp(error, "")) printf("\n[ceval]: %s\n", error);
+void ceval_error(const char* error_format_string, ...) {
+    #ifndef CEVAL_STOICAL
+        // start whining
+        printf("\n[ceval]: ");
+        va_list args;
+        va_start(args, error_format_string);
+        vprintf(error_format_string, args);
+        va_end(args);
+        printf("\n");
+    #endif
 }
 double ceval_gcd_binary(int a, int b) {
     if (a == 0 && b == 0)
