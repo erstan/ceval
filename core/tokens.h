@@ -175,7 +175,7 @@ ceval_token_info_ ceval_token_info[] = {
 #define CEVAL_TOKEN_TABLE_SIZE sizeof(ceval_token_info) / sizeof(ceval_token_info[0])
 #endif
 int ceval_is_binary_opr(ceval_node_id id) {
-    for (int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
+    for(unsigned int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
         if (ceval_token_info[i].id == id && ceval_token_info[i].token_type == CEVAL_BINARY_OPERATOR) {
             return 1;
         }
@@ -183,7 +183,7 @@ int ceval_is_binary_opr(ceval_node_id id) {
     return 0;
 }
 int ceval_is_binary_fun(ceval_node_id id) {
-    for (int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
+    for(unsigned int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
         if (ceval_token_info[i].id == id && ceval_token_info[i].token_type == CEVAL_BINARY_FUNCTION) {
             return 1;
         }
@@ -191,7 +191,7 @@ int ceval_is_binary_fun(ceval_node_id id) {
     return 0;
 }
 const char * ceval_token_symbol(ceval_node_id id) {
-    for (int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
+    for(unsigned int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
         if (id == ceval_token_info[i].id) {
             return ceval_token_info[i].symbol;
         }
@@ -199,7 +199,7 @@ const char * ceval_token_symbol(ceval_node_id id) {
 return "";
 }
 ceval_node_id ceval_token_id(char * symbol) {
-    for (int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
+    for(unsigned int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
         if (!strcmp(ceval_token_info[i].symbol, symbol)) {
             return ceval_token_info[i].id;
         }
@@ -207,7 +207,7 @@ ceval_node_id ceval_token_id(char * symbol) {
 return CEVAL_WHITESPACE;
 }
 double ceval_token_prec(ceval_node_id id) {
-    for (int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
+    for(unsigned int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
         if (id == ceval_token_info[i].id) {
             return ceval_token_info[i].prec;
         }

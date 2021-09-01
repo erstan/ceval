@@ -12,6 +12,17 @@
 //constant definitions
 const float CEVAL_PI = M_PI;
 const float CEVAL_E = M_E;
+#ifdef M_PI
+#define CEVAL_PI M_PI
+#else
+#define CEVAL_PI 3.14159265358979323846
+#endif
+#ifdef M_E
+#define CEVAL_E M_E
+#else
+#define CEVAL_E 2.71828182845904523536
+#endif
+
 #ifndef CEVAL_EPSILON
 #define CEVAL_EPSILON 1e-2
 #endif
@@ -112,8 +123,8 @@ double ceval_gcd_binary(int a, int b) {
 }
 char * ceval_shrink(char * x) {
     char * y = x;
-    int len = 0;
-    for (int i = 0; i < strlen(x); i++) {
+    unsigned int len = 0;
+    for (unsigned int i = 0; i < strlen(x); i++) {
         if(x[i] == ' ' || x[i] == '\n' || x[i] == '\t' || x[i] == '\r') {
             continue;
         } else {
@@ -258,7 +269,7 @@ double ceval_tanh(double x) {
     return tanh(x);
 }
 double ceval_not(double x) {
-    return !x;
+    return (double) ! (int)x;
 }
 double ceval_bit_not(double x) {
     if(ceval_frac_part(x) == 0) {
@@ -365,8 +376,8 @@ double ceval_gcd(double a, double b, int arg_check) {
     }
     double a_f = ceval_frac_part(a),
         b_f = ceval_frac_part(b);
-    int a_i = ceval_int_part(a),
-        b_i = ceval_int_part(b);
+    int a_i = (int)ceval_int_part(a),
+        b_i = (int)ceval_int_part(b);
     if (a_f == 0 && b_f == 0) {
         return (double) ceval_gcd_binary(a_i, b_i);
     } else {
@@ -419,21 +430,21 @@ double ceval_not_equal(double a, double b, int arg_check) {
         ceval_error("!=: function takes two arguments");
         return NAN;
     }
-    return !ceval_are_equal(a, b, 0);
+    return (double)!(int)ceval_are_equal(a, b, 0);
 }
 double ceval_lesser(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("<=: function takes two arguments");
         return NAN;
     }
-    return !ceval_greater_s(a, b, 0);
+    return (double)!(int)ceval_greater_s(a, b, 0);
 }
 double ceval_greater(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error(">=: function takes two arguments");
         return NAN;
     }
-    return !ceval_lesser_s(a, b, 0);
+    return (double)!(int)ceval_lesser_s(a, b, 0);
 }
 double ceval_lesser_s(double a, double b, int arg_check) {
     if (arg_check) {
@@ -486,14 +497,14 @@ double ceval_and(double x, double y, int arg_check) {
         ceval_error("and(): function takes two arguments");
         return NAN;
     }
-    return (double) x && y;
+    return (double) ((int)x && (int)y);
 }
 double ceval_or(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error("or(): function takes two arguments");
         return NAN;
     }
-    return (double) x || y;
+    return (double) ((int)x || (int)y);
 }
 double ceval_bit_and(double x, double y, int arg_check) {
     if (arg_check) {

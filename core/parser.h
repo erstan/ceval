@@ -86,10 +86,10 @@ void * ceval_make_tree(char * expression) {
         if (c == '\0') break;
         int token_found = -1;
         char token[50];
-        int len;
-        for (int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
+        unsigned int len = 0;
+        for(unsigned int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
             strcpy(token, ceval_token_info[i].symbol);
-            len = strlen(token);
+            len = (unsigned int) strlen(token);
             if (!memcmp(expression - 1, token, len)) {
                 token_found = ceval_token_info[i].id;
                 isRightAssoc = (token_found == CEVAL_POW || token_found == CEVAL_CLOSEPAR ) ? 1 : 0;
@@ -129,12 +129,13 @@ void * ceval_make_tree(char * expression) {
             } else if (token_found == CEVAL_NUMBER){
                 // if the token is a number, then store it in an array
                 node.pre = ceval_token_prec(CEVAL_NUMBER);
-                int i;
+                unsigned int i;
                 char number[CEVAL_MAX_DIGITS];
                 for (i = 0; i + 1 < sizeof(number);) {
                     number[i++] = c;
                     c = * expression;
-                    if ('0' <= c && c <= '9' || c == '.')
+                    if (('0' <= c && c <= '9') || 
+                                          c == '.')
                         expression++;
                     else 
                         break;
