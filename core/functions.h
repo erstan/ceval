@@ -10,8 +10,6 @@
 #include<stdarg.h>
 
 //constant definitions
-const float CEVAL_PI = M_PI;
-const float CEVAL_E = M_E;
 #ifdef M_PI
 #define CEVAL_PI M_PI
 #else
