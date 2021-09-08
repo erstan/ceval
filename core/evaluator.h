@@ -39,7 +39,7 @@ double ceval_evaluate_tree_(const ceval_node * node) {
         case CEVAL_BIT_RSHIFT:  case CEVAL_PLUS:  case CEVAL_MINUS:  case CEVAL_TIMES:  
         case CEVAL_DIVIDE:  case CEVAL_MODULO:  case CEVAL_QUOTIENT:  case CEVAL_POW: 
         case CEVAL_GCD:  case CEVAL_HCF:  case CEVAL_LCM:  case CEVAL_LOG: 
-        case CEVAL_ATAN2:  case CEVAL_SCI2DEC: case CEVAL_POWFUN:
+        case CEVAL_ATAN2: case CEVAL_POWFUN:
             if (node -> left == NULL) {
                 return ( * double_arg_fun[node -> id])(left, right, -1);
             } else if (node -> right == NULL) {

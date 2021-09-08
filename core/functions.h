@@ -87,7 +87,6 @@ double ceval_greater_s(double, double, int);
 double ceval_comma(double, double, int);
 double ceval_power(double, double, int);
 double ceval_atan2(double, double, int);
-double ceval_sci2dec(double, double, int);
 double ceval_and(double, double, int);
 double ceval_or(double, double, int);
 double ceval_bit_and(double, double, int);
@@ -149,7 +148,7 @@ double( * single_arg_fun[])(double) = {
     NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL, 
-    NULL, NULL, NULL,
+    NULL, NULL,
     // single_arg_fun
     ceval_abs, ceval_exp, ceval_sqrt, ceval_cbrt,
     ceval_ln, ceval_log10, ceval_ceil, ceval_floor,
@@ -287,7 +286,7 @@ double( * double_arg_fun[])(double, double, int) = {
     ceval_bit_rshift, ceval_sum, ceval_diff, ceval_prod,
     ceval_div, ceval_modulus, ceval_quotient, ceval_power, 
     ceval_gcd, ceval_hcf, ceval_lcm, ceval_log,
-    ceval_atan2, ceval_sci2dec, ceval_power,
+    ceval_atan2, ceval_power,
     // single_arg_fun
     NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL,
@@ -482,13 +481,6 @@ double ceval_atan2(double x, double y, int arg_check) {
         return NAN;
     }
     return atan2(x, y);
-}
-double ceval_sci2dec(double m, double e, int arg_check) {
-    if (arg_check) {
-        ceval_error("sci2dec(): function takes two arguments");
-        return NAN;
-    }
-    return (double) m * ceval_power(10, e, 0);
 }
 double ceval_and(double x, double y, int arg_check) {
     if (arg_check) {

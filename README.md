@@ -19,7 +19,7 @@ A C/C++ header for parsing and evaluation of arithmetic expressions.
 </table>
 
 ## Supported expressions
-Any valid combination of the following operators and functions, with floating point numbers as operands can be parsed by <b>ceval</b>. Parentheses can be used to override the default operator precedences. 
+Any valid combination of the following operators and functions, with floating point numbers (in decimal or exponential form) as operands can be parsed by <b>ceval</b>. Parentheses can be used to override the default operator precedences. 
 
 * Arithematic operators
 
@@ -38,9 +38,7 @@ Any valid combination of the following operators and functions, with floating po
 
 * Pre-defined math constants
 
-`_pi`, `_e`
-
-...pre-defined constants are prefixed with an underscore
+`pi`, `e`
 
 * Logical operators
 
@@ -54,10 +52,7 @@ Any valid combination of the following operators and functions, with floating po
 
   * `,` (Comma operator)
   Comma operator returns the result of it's rightmost operand
-  Ex: `2,3` would give `3`; `4,3,0` would be equal to `0`; and `cos(_pi/2,_pi/3,_pi)` would return `cos(_pi)` i.e, `-1`
-  * `e` (e-operator for scientific notation)
-  Using the binary `e` operator, we can use scientific notation in our arithmetic expressions
-  Ex: `0.0314` could be written as `3.14e-2`; `1230000` could be subsituted by `1.23e6`
+  Ex: `2,3` would give `3`; `4,3,0` would be equal to `0`; and `cos(pi/2,pi/3,pi)` would return `cos(pi)` i.e, `-1`
 
 
 ## Installation
@@ -152,14 +147,14 @@ In = (3.2+2.8)/2
 Out = 3.000000
 
 
-In = _e**_pi>_pi**_e
-                _e
+In = e**pi>pi**e
+                e
         **
-                _pi
+                pi
 >
-                _pi
+                pi
         **
-                _e
+                e
 
 Out = 1.000000
 
@@ -190,15 +185,15 @@ In = 2*2.0+1.4
 Out = 5.400000
 
 
-In = (5/4+3*-5)+(sin(_pi))**2+(cos(_pi))**2
+In = (5/4+3*-5)+(sin(pi))**2+(cos(pi))**2
                 2
         **
-                        _pi
+                        pi
                 cos
 +
                         2
                 **
-                                _pi
+                                pi
                         sin
         +
                                         5
@@ -258,23 +253,23 @@ In = (2+3/3+(3+9.7))
 Out = 15.700000
 
 
-In = sin(_pi/2)+cos(_pi/2)+tan(_pi/2)
+In = sin(pi/2)+cos(pi/2)+tan(pi/2)
                         2
                 /
-                        _pi
+                        pi
         tan
 +
                                 2
                         /
-                                _pi
+                                pi
                 cos
         +
                                 2
                         /
-                                _pi
+                                pi
                 sin
 
-[ceval]: tan() is not defined for odd-integral multiples of _pi/2
+[ceval]: tan() is not defined for odd-integral multiples of pi/2
 
 Out = nan
 

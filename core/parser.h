@@ -131,13 +131,21 @@ void * ceval_make_tree(char * expression) {
                 node.pre = ceval_token_prec(CEVAL_NUMBER);
                 unsigned int i;
                 char number[CEVAL_MAX_DIGITS];
-                for (i = 0; i + 1 < sizeof(number);) {
-                    number[i++] = c;
+                number[0] = c;
+                for (i = 1; i + 1 < sizeof(number);) {
                     c = * expression;
+                    number[i++] = c;
                     if (('0' <= c && c <= '9') || 
-                                          c == '.')
-                        expression++;
-                    else 
+                                          c == '.' ||
+                                            c == 'e') {
+                        if (c == 'e' && *(expression+1)=='-') {
+                            number[i++] = *(expression + 1);
+                            expression += 2;
+                        } else {
+                            expression++;
+                        }
+                    }
+                    else
                         break;
                 }
                 number[i] = '\0';
