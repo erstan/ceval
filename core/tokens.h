@@ -85,7 +85,7 @@ typedef struct ceval_token_info_ {
     double prec;
     ceval_token_type token_type;
 } ceval_token_info_; 
-ceval_token_info_ ceval_token_info[] = {
+static ceval_token_info_ ceval_token_info[] = {
     { CEVAL_WHITESPACE, " ", CEVAL_PREC_IGNORE, CEVAL_OTHER },
     { CEVAL_WHITESPACE, "\n", CEVAL_PREC_IGNORE, CEVAL_OTHER },
     { CEVAL_WHITESPACE, "\t", CEVAL_PREC_IGNORE, CEVAL_OTHER },
@@ -171,6 +171,13 @@ ceval_token_info_ ceval_token_info[] = {
 #ifndef CEVAL_TOKEN_TABLE_SIZE
 #define CEVAL_TOKEN_TABLE_SIZE sizeof(ceval_token_info) / sizeof(ceval_token_info[0])
 #endif
+// function prototypes for mapping the attributes of various tokens
+int ceval_is_binary_opr(ceval_node_id);
+int ceval_is_binary_fun(ceval_node_id);
+const char * ceval_token_symbol(ceval_node_id);
+ceval_node_id ceval_token_id(char * symbol);
+double ceval_token_prec(ceval_node_id);
+
 int ceval_is_binary_opr(ceval_node_id id) {
     for(unsigned int i = 0; i < CEVAL_TOKEN_TABLE_SIZE; i++) {
         if (ceval_token_info[i].id == id && ceval_token_info[i].token_type == CEVAL_BINARY_OPERATOR) {

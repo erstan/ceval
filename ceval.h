@@ -10,6 +10,11 @@
 // - define CEVAL_EPSILON (default value : 1e-2), CEVAL_DELTA (default value : 1e-6) and CEVAL_MAX_DIGITS (default value : 15) manually before the include directive
 // - define CEVAL_STOICAL before the #include directive to use the parser/evaluator in stoical (non-complaining) mode. It suppresses all the error messages from [ceval]. 
 
+
+// prototypes 
+double ceval_result(char *);
+void ceval_tree(char *);
+
 double ceval_result(char * expr) {
     void * tree = ceval_make_tree(expr);
     double result = ceval_evaluate_tree(tree);
@@ -23,11 +28,15 @@ void ceval_tree(char * expr) {
 }
 
 #ifdef CEVAL_CXX
+    // prototypes
+    double ceval_result(std::string);
+    void ceval_tree(std::string);
+
     double ceval_result(std::string expr) {
-        return ceval_result((char * ) expr.c_str());
+        return ceval_result((const char * ) expr.c_str());
     }
     void ceval_tree(std::string expr) {
-        ceval_tree((char * ) expr.c_str());
+        ceval_tree((const char * ) expr.c_str());
     }
 #endif
 #endif

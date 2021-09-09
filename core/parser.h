@@ -91,7 +91,7 @@ void * ceval_make_tree(char * expression) {
             strcpy(token, ceval_token_info[i].symbol);
             len = (unsigned int) strlen(token);
             if (!memcmp(expression - 1, token, len)) {
-                token_found = ceval_token_info[i].id;
+                token_found = (int)ceval_token_info[i].id;
                 isRightAssoc = (token_found == CEVAL_POW || token_found == CEVAL_CLOSEPAR ) ? 1 : 0;
                 break;
             }

@@ -131,7 +131,7 @@ char * ceval_shrink(char * x) {
                 i++;
                 continue;
             }
-            *(y + len) = tolower(x[i]);
+            *(y + len) = (char)tolower(x[i]);
             len++;
         }
     }
@@ -139,7 +139,7 @@ char * ceval_shrink(char * x) {
     return y;
 }
 //single argument function definitions
-double( * single_arg_fun[])(double) = {
+static double( * single_arg_fun[])(double) = {
     // double_arg_fun (first three tokens are whitespace and parantheses)
     NULL, NULL, NULL, NULL,
     NULL, NULL, NULL, NULL,
@@ -168,14 +168,14 @@ double ceval_signum(double x) {
 double ceval_asin(double x) {
     if (x > 1 || x < -1) {
         ceval_error("Numerical argument out of domain");
-        return NAN;
+        return (double)NAN;
     }
     return asin(x);
 }
 double ceval_acos(double x) {
     if (x > 1 || x < -1) {
         ceval_error("Numerical argument out of domain");
-        return NAN;
+        return (double)NAN;
     }
     return acos(x);
 }
@@ -197,7 +197,7 @@ double ceval_tan(double x) {
     double tan_val = tan(x);
     if (fabs(ceval_modulus(x - CEVAL_PI / 2, CEVAL_PI, 0)) <= CEVAL_DELTA) {
         ceval_error("tan() is not defined for odd-integral multiples of pi/2");
-        return NAN;
+        return (double)NAN;
     }
     return (fabs(tan_val) <= CEVAL_EPSILON) ? 0 : tan_val;
 }
@@ -229,7 +229,7 @@ double ceval_exp(double x) {
 double ceval_factorial(double x) {
     if (x < 0) {
         ceval_error("Numerical argument out of domain");
-        return NAN;
+        return (double)NAN;
     }
     return tgamma(x + 1);
 }
@@ -245,7 +245,7 @@ double ceval_abs(double x) {
 double ceval_sqrt(double x) {
     if (x >= 0) return sqrt(x);
     ceval_error("sqrt(): can't operate on negative numbers");
-    return NAN;
+    return (double)NAN;
 }
 double ceval_cbrt(double x) {
     return cbrt(x);
@@ -273,11 +273,11 @@ double ceval_bit_not(double x) {
         return ~(int)x;
     } else {
         ceval_error("bit_not(): operand must be of integral type");
-        return NAN;
+        return (double)NAN;
     }
 }
 //double argument function definitions
-double( * double_arg_fun[])(double, double, int) = {
+static double( * double_arg_fun[])(double, double, int) = {
     // double_arg_fun (first three tokens are whitespace and parantheses)
     NULL, NULL, NULL, ceval_comma,
     ceval_or, ceval_and, ceval_bit_or, ceval_bit_xor,
@@ -301,28 +301,28 @@ double( * double_arg_fun[])(double, double, int) = {
 double ceval_sum(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("sum(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return a + b;
 }
 double ceval_diff(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("diff(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return a - b;
 }
 double ceval_prod(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("prod(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return a * b;
 }
 double ceval_div(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("div(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     if (b == 0 && a == 0) {
         ceval_error("0/0 is indeterminate...");
@@ -331,14 +331,14 @@ double ceval_div(double a, double b, int arg_check) {
     } else if (b == 0) {
         ceval_error("Division by 0 is not defined...");
         ceval_error("Continuing evaluation with the assumption 1/0 = inf");
-        return a * INFINITY;
+        return a * (double)INFINITY;
     }
     return a / b;
 }
 double ceval_modulus(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("modulo(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     if (b == 0) {
         ceval_error("Division by 0 is not defined...");
@@ -350,7 +350,7 @@ double ceval_modulus(double a, double b, int arg_check) {
 double ceval_quotient(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("quotient(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     //a = b*q + r
     //q = (a - r)/b
@@ -362,14 +362,14 @@ double ceval_quotient(double a, double b, int arg_check) {
     } else if (b == 0) {
         ceval_error("Division by 0 is not defined...");
         ceval_error("Continuing evaluation with the assumption 1/0 = inf");
-        return a * INFINITY;
+        return a * (double)INFINITY;
     }
     return (a - ceval_modulus(a, b, 0)) / b;
 }
 double ceval_gcd(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("gcd(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     double a_f = ceval_frac_part(a),
         b_f = ceval_frac_part(b);
@@ -379,32 +379,32 @@ double ceval_gcd(double a, double b, int arg_check) {
         return (double) ceval_gcd_binary(a_i, b_i);
     } else {
         ceval_error("gcd() takes only integral parameters");
-        return NAN;
+        return (double)NAN;
     }
 }
 double ceval_hcf(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("hcf(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return ceval_gcd(a, b, 0);
 }
 double ceval_lcm(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("lcm(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return a * b / ceval_gcd(a, b, 0);
 }
 double ceval_log(double b, double x, int arg_check) {
     if (arg_check) {
         ceval_error("log(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     if (b == 0) {
         if (x == 0) {
             ceval_error("log(0,0) is indeterminate");
-            return NAN;
+            return (double)NAN;
         } else {
             return 0;
         }
@@ -414,7 +414,7 @@ double ceval_log(double b, double x, int arg_check) {
 double ceval_are_equal(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("==: function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     if (fabs(a - b) <= CEVAL_EPSILON) {
         return 1;
@@ -425,136 +425,136 @@ double ceval_are_equal(double a, double b, int arg_check) {
 double ceval_not_equal(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("!=: function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return (double)!(int)ceval_are_equal(a, b, 0);
 }
 double ceval_lesser(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("<=: function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return (double)!(int)ceval_greater_s(a, b, 0);
 }
 double ceval_greater(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error(">=: function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return (double)!(int)ceval_lesser_s(a, b, 0);
 }
 double ceval_lesser_s(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error("<: function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return (b - a) >= CEVAL_EPSILON;
 }
 double ceval_greater_s(double a, double b, int arg_check) {
     if (arg_check) {
         ceval_error(">: function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return (a - b) >= CEVAL_EPSILON;
 }
 double ceval_comma(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error(",: function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return y;
 }
 double ceval_power(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error("pow(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     if(x<0 && ceval_frac_part(y)!=0) {
         ceval_error("pow(): negative numbers can only be raised to integral powers");
-        return NAN;
+        return (double)NAN;
     }
     return pow(x, y);
 }
 double ceval_atan2(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error("atan2(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return atan2(x, y);
 }
 double ceval_and(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error("and(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return (double) ((int)x && (int)y);
 }
 double ceval_or(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error("or(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     return (double) ((int)x || (int)y);
 }
 double ceval_bit_and(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error("bit_and(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     if(ceval_frac_part(x) == 0 && ceval_frac_part(y) == 0) {
         return (int)x & (int)y;
     } else {
         ceval_error("bit_and(): operands must be of integral type");
-        return NAN;
+        return (double)NAN;
     }
 }
 double ceval_bit_xor(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error("bit_xor(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     if(ceval_frac_part(x) == 0 && ceval_frac_part(y) == 0) {
         return (int)x ^ (int)y;
     } else {
         ceval_error("bit_xor(): operands must be of integral type");
-        return NAN;
+        return (double)NAN;
     }
 }
 double ceval_bit_or(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error("bit_or(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     if(ceval_frac_part(x) == 0 && ceval_frac_part(y) == 0) {
         return (int)x | (int)y;
     } else {
         ceval_error("bit_or(): operands must be of integral type");
-        return NAN;
+        return (double)NAN;
     }
 }
 double ceval_bit_lshift(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error("bit_lshift(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     if(ceval_frac_part(x) == 0 && ceval_frac_part(y) == 0) {
         return (int)x << (int)y;
     } else {
         ceval_error("bit_lshift(): operands must be of integral type");
-        return NAN;
+        return (double)NAN;
     }
 
 }
 double ceval_bit_rshift(double x, double y, int arg_check) {
     if (arg_check) {
         ceval_error("bit_rshift(): function takes two arguments");
-        return NAN;
+        return (double)NAN;
     }
     if(ceval_frac_part(x) == 0 && ceval_frac_part(y) == 0) {
         return (int)x >> (int)y;
     } else {
         ceval_error("bit_rshift(): operands must be of integral type");
-        return NAN;
+        return (double)NAN;
     }
 }
 #endif

@@ -29,7 +29,7 @@ double ceval_evaluate_tree_(const ceval_node * node) {
                 return ( * single_arg_fun[node -> id])(right);
             } else {
                 ceval_error("Missing operand(s)");
-                return NAN;
+                return (double)NAN;
             }
         //binary operators/functions
         case CEVAL_COMMA:  
@@ -52,7 +52,7 @@ double ceval_evaluate_tree_(const ceval_node * node) {
     }
 }
 double ceval_evaluate_tree(const void * node) {
-    return (node == NULL)? NAN :
-            ceval_evaluate_tree_((ceval_node * ) node);
+    return (node == NULL)? (double)NAN :
+            ceval_evaluate_tree_((const ceval_node * ) node);
 }
 #endif
