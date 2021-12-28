@@ -266,7 +266,7 @@ double ceval_tanh(double x) {
     return tanh(x);
 }
 double ceval_not(double x) {
-    return (double) ! (int)x;
+    return ceval_are_equal(x, 0, 0);
 }
 double ceval_bit_not(double x) {
     if(ceval_frac_part(x) == 0) {
