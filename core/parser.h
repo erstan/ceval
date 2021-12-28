@@ -138,7 +138,8 @@ void * ceval_make_tree(char * expression) {
                     if (('0' <= c && c <= '9') || 
                                           c == '.' ||
                                             c == 'e') {
-                        if (c == 'e' && *(expression+1)=='-') {
+                        if (c == 'e' && 
+                                (*(expression+1)=='-' || *(expression+1)=='+')) {
                             number[i++] = *(expression + 1);
                             expression += 2;
                         } else {
