@@ -166,6 +166,12 @@ void * ceval_make_tree(char * expression) {
                 node.id = (ceval_node_id)token_found;
                 node.pre = ceval_token_prec(node.id);
                 if (node.id == CEVAL_CONST_PI || node.id == CEVAL_CONST_E) {
+                    if(previous_id == CEVAL_CONST_PI || previous_id == CEVAL_CONST_E) {
+                      ceval_error("Misplaced '%c'.", c);
+                      ceval_delete_tree(root.right);
+                      root.right = NULL;
+                      return NULL;
+                    }
                     node.number = (node.id == CEVAL_CONST_PI) ? CEVAL_PI : CEVAL_E;
                 }
             }
